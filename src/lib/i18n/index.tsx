@@ -2,22 +2,19 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { ru, type Translations } from "./locales/ru";
-import { kg } from "./locales/kg";
 import { en } from "./locales/en";
 
-export type Locale = "ru" | "kg" | "en";
+export type Locale = "ru" | "en";
 
-const translations: Record<Locale, Translations> = { ru, kg, en };
+const translations: Record<Locale, Translations> = { ru, en };
 
 export const localeNames: Record<Locale, string> = {
   ru: "Русский",
-  kg: "Кыргызча",
   en: "English",
 };
 
 export const localeFlags: Record<Locale, string> = {
   ru: "🇷🇺",
-  kg: "🇰🇬",
   en: "🇬🇧",
 };
 
@@ -48,7 +45,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem("locale", newLocale);
-    document.documentElement.lang = newLocale === "kg" ? "ky" : newLocale;
+    document.documentElement.lang = newLocale;
   }, []);
 
   const t = translations[locale];

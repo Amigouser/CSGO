@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import {
   Trophy,
   LayoutDashboard,
@@ -15,6 +16,8 @@ import {
   Award,
   Radio,
   Sparkles,
+  ChevronDown,
+  MoreHorizontal,
 } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
@@ -23,13 +26,19 @@ import { useI18n } from "@/lib/i18n";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
   const { t } = useI18n();
 
-  const navLinks = [
+  const primaryLinks = [
     { href: "/tournaments", label: t.nav.tournaments, icon: Trophy },
     { href: "/live", label: t.nav.live, icon: Radio },
     { href: "/leaderboard", label: t.nav.leaderboard, icon: Medal },
     { href: "/dashboard", label: t.nav.dashboard, icon: LayoutDashboard },
+  ];
+
+  const moreLinks = [
     { href: "/achievements", label: t.nav.achievements, icon: Award },
     { href: "/predictions", label: t.nav.predictions, icon: Sparkles },
     { href: "/roll", label: t.nav.roll, icon: Dice1 },
@@ -38,57 +47,172 @@ export default function Navbar() {
     { href: "/balance", label: t.nav.balance, icon: Scale },
   ];
 
+  const allLinks = [...primaryLinks, ...moreLinks];
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
+        setMoreOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+    setMoreOpen(false);
+  }, [pathname]);
+
+  const isActive = (href: string) => pathname === href;
+  const isMoreActive = moreLinks.some((l) => isActive(l.href));
+
   return (
     <nav
       className="safe-top sticky top-0 z-50"
       style={{
-        background: "#161b22",
-        borderBottom: "1px solid #30363d",
+        background: "rgba(22, 27, 34, 0.85)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        borderBottom: "1px solid rgba(48, 54, 61, 0.6)",
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-14 items-center">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-14 items-center gap-2">
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 font-black text-lg transition-opacity hover:opacity-80"
+            className="flex items-center gap-2 font-black text-base sm:text-lg transition-opacity hover:opacity-80 flex-shrink-0"
           >
-            <Swords size={20} style={{ color: "var(--gold)" }} />
-            <span className="hidden sm:block" style={{ color: "var(--foreground)" }}>
+            <Swords size={22} style={{ color: "var(--gold)" }} />
+            <span style={{ color: "var(--foreground)" }}>
               Tomsk<span style={{ color: "var(--gold)" }}>GG</span>
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
-                style={{ color: "var(--text-sub)", background: "transparent" }}
+          <div className="hidden md:flex items-center gap-0.5">
+            {primaryLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all relative"
+                  style={{
+                    color: active ? "var(--gold)" : "var(--text-sub)",
+                    background: active ? "rgba(200,155,60,0.08)" : "transparent",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = "var(--hover-bg)";
+                      e.currentTarget.style.color = "var(--foreground)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = "var(--text-sub)";
+                    }
+                  }}
+                >
+                  <link.icon size={14} />
+                  {link.label}
+                  {active && (
+                    <span
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
+                      style={{ background: "var(--gold)" }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+
+            {/* More dropdown */}
+            <div className="relative" ref={moreRef}>
+              <button
+                onClick={() => setMoreOpen(!moreOpen)}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
+                style={{
+                  color: isMoreActive ? "var(--gold)" : "var(--text-sub)",
+                  background: isMoreActive ? "rgba(200,155,60,0.08)" : "transparent",
+                }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "var(--hover-bg)";
-                  e.currentTarget.style.color = "var(--foreground)";
+                  if (!isMoreActive) {
+                    e.currentTarget.style.background = "var(--hover-bg)";
+                    e.currentTarget.style.color = "var(--foreground)";
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = "var(--text-sub)";
+                  if (!isMoreActive) {
+                    e.currentTarget.style.background = "transparent";
+                    e.currentTarget.style.color = "var(--text-sub)";
+                  }
                 }}
               >
-                <link.icon size={14} />
-                {link.label}
-              </Link>
-            ))}
+                <MoreHorizontal size={14} />
+                <span>Ещё</span>
+                <ChevronDown
+                  size={12}
+                  style={{
+                    transform: moreOpen ? "rotate(180deg)" : "rotate(0)",
+                    transition: "transform 0.2s",
+                  }}
+                />
+              </button>
+
+              {moreOpen && (
+                <div
+                  className="absolute right-0 top-full mt-1 w-48 rounded-xl overflow-hidden shadow-2xl"
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
+                    animation: "fadeIn 0.15s ease-out",
+                  }}
+                >
+                  {moreLinks.map((link) => {
+                    const active = isActive(link.href);
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-[13px] font-medium transition-colors"
+                        style={{
+                          color: active ? "var(--gold)" : "var(--text-sub)",
+                          background: active ? "rgba(200,155,60,0.08)" : "transparent",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "var(--hover-bg)";
+                          e.currentTarget.style.color = "var(--foreground)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = active
+                            ? "rgba(200,155,60,0.08)"
+                            : "transparent";
+                          e.currentTarget.style.color = active
+                            ? "var(--gold)"
+                            : "var(--text-sub)";
+                        }}
+                      >
+                        <link.icon size={14} />
+                        {link.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             <LanguageSwitcher />
             <NotificationPanel />
             <ThemeToggle />
             <button
-              className="md:hidden p-2 rounded-lg cursor-pointer"
+              className="md:hidden p-1.5 rounded-lg cursor-pointer"
               style={{ color: "var(--text-sub)", background: "transparent" }}
               onClick={() => setMobileOpen(!mobileOpen)}
             >
@@ -101,25 +225,46 @@ export default function Navbar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div
-          className="md:hidden border-t"
-          style={{ background: "#161b22", borderColor: "#30363d" }}
+          className="md:hidden border-t overflow-hidden"
+          style={{
+            background: "rgba(22, 27, 34, 0.95)",
+            backdropFilter: "blur(16px)",
+            borderColor: "rgba(48, 54, 61, 0.6)",
+            animation: "slideDown 0.2s ease-out",
+          }}
         >
-          <div className="px-4 py-3 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium"
-                style={{ color: "var(--text-sub)" }}
-                onClick={() => setMobileOpen(false)}
-              >
-                <link.icon size={16} />
-                {link.label}
-              </Link>
-            ))}
+          <div className="px-3 py-2 space-y-0.5">
+            {allLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  style={{
+                    color: active ? "var(--gold)" : "var(--text-sub)",
+                    background: active ? "rgba(200,155,60,0.08)" : "transparent",
+                  }}
+                >
+                  <link.icon size={18} />
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+          from { max-height: 0; opacity: 0; }
+          to { max-height: 600px; opacity: 1; }
+        }
+      `}</style>
     </nav>
   );
 }

@@ -194,12 +194,12 @@ export const ru: Translations = {
     profile: "Профиль",
   },
   hero: {
-    badge: "TomskGG — турниры по Dota 2 и CS2",
+    badge: "TomskGG — турниры по CS2",
     title1: "Организуй",
     titleHighlight: "эпические",
     title2: "турниры по",
-    titleGame: "Dota 2 и CS2",
-    subtitle: "Киберспортивные турниры по Dota 2 и CS2 в Томске: регистрация через Steam, автодрафт команд, турнирная сетка, глобальный рейтинг и полная статистика",
+    titleGame: "CS2",
+    subtitle: "Киберспортивные турниры по CS2 в Томске: регистрация через Steam, турнирная сетка, глобальный рейтинг и полная статистика",
     viewTournaments: "Смотреть турниры",
     loginSteam: "Войти через Steam",
   },
@@ -259,7 +259,7 @@ export const ru: Translations = {
   },
   tip: {
     title: "Совет",
-    text: "Сделай лобби в Dota 2 открытым — тогда статистика матча (убийства, герои) появится автоматически",
+    text: "Подключи Steam-аккаунт — тогда статистика матчей CS2 (убийства, смерти, ADR) появится автоматически",
   },
   leaderboard: {
     title: "Рейтинг игроков",
@@ -276,8 +276,8 @@ export const ru: Translations = {
     matchesPlayed: "Матчей сыграно",
     avgMmr: "Средний MMR",
     recentMatches: "Последние матчи",
-    topHeroes: "Топ герои",
-    picks: "пиков",
+    topHeroes: "Топ оружие",
+    picks: "убийств",
   },
   achievements: {
     title: "Достижения",
@@ -301,7 +301,7 @@ export const ru: Translations = {
     noMatches: "Нет активных матчей",
   },
   roll: {
-    title: "Ролл героя",
+    title: "Ролл оружия",
     roll: "Ролл!",
     rolling: "Ролл...",
     history: "История",
@@ -310,7 +310,7 @@ export const ru: Translations = {
     title: "Войти через Steam",
     description: "Авторизуйся для участия в турнирах и отслеживания статистики",
     tournaments: "Турниры",
-    tournamentsDesc: "Участвуй в турнирах по Dota 2 и CS2",
+    tournamentsDesc: "Участвуй в турнирах по CS2",
     rating: "Рейтинг",
     ratingDesc: "Соревнуйся и поднимайся в рейтинге",
     teams: "Команды",

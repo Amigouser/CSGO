@@ -23,12 +23,4 @@ export async function getSteamProfile(steamId: string) {
   }
 }
 
-export async function getSteamMMR(steamId: string): Promise<number | null> {
-  try {
-    const res = await fetch(`https://api.opendota.com/api/players/${steamId}`);
-    const data = await res.json();
-    return data?.mmr_estimate?.estimate || null;
-  } catch {
-    return null;
-  }
-}
+

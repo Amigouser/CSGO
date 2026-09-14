@@ -1,7 +1,7 @@
 {
-  "name": "TomskGG — Турниры Dota 2 и CS2",
+  "name": "TomskGG — Турниры CS2",
   "short_name": "TomskGG",
-  "description": "Киберспортивная платформа Томска: турниры по Dota 2 и CS2",
+  "description": "Киберспортивная платформа Томска: турниры по CS2",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d1117",

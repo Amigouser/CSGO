@@ -3,12 +3,12 @@
 import { useState, useCallback } from "react";
 import { Dice1, RotateCcw } from "lucide-react";
 
-const heroes = [
-  "Pudge", "Invoker", "Juggernaut", "Phantom Assassin", "Crystal Maiden",
-  "Anti-Mage", "Axe", "Shadow Fiend", "Sniper", "Pugna",
-  "Lina", "Lion", "Rubick", "Earthshaker", "Tidehunter",
-  "Drow Ranger", "Windranger", "Mirana", "Bounty Hunter", "Riki",
-  "Witch Doctor", "Warlock", "Ogre Magi", "Zeus", "Viper",
+const weapons = [
+  "AK-47", "M4A4", "M4A1-S", "AWP", "Desert Eagle",
+  "USP-S", "Glock-18", "P250", "Five-Seven", "Tec-9",
+  "SSG 08", "SG 553", "AUG", "FAMAS", "Galil AR",
+  "MP9", "MAC-10", "UMP-45", "P90", "PP-Bizon",
+  "Nova", "XM1014", "MAG-7", "Sawed-Off", "M249",
 ];
 
 export default function RollPage() {
@@ -22,11 +22,11 @@ export default function RollPage() {
 
     let count = 0;
     const interval = setInterval(() => {
-      setResult(heroes[Math.floor(Math.random() * heroes.length)]);
+      setResult(weapons[Math.floor(Math.random() * weapons.length)]);
       count++;
       if (count > 15) {
         clearInterval(interval);
-        const final = heroes[Math.floor(Math.random() * heroes.length)];
+        const final = weapons[Math.floor(Math.random() * weapons.length)];
         setResult(final);
         setHistory((prev) => [final, ...prev].slice(0, 10));
         setRolling(false);

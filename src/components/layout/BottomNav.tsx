@@ -4,8 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Trophy,
-  LayoutDashboard,
-  Award,
+  Medal,
   User,
   Home,
   Radio,
@@ -15,7 +14,7 @@ const bottomLinks = [
   { href: "/", label: "Главная", icon: Home },
   { href: "/tournaments", label: "Турниры", icon: Trophy },
   { href: "/live", label: "Live", icon: Radio },
-  { href: "/achievements", label: "Достижения", icon: Award },
+  { href: "/leaderboard", label: "Рейтинг", icon: Medal },
   { href: "/profile/me", label: "Профиль", icon: User },
 ];
 

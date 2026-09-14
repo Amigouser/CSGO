@@ -2,72 +2,31 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
-import {
-  Trophy,
-  LayoutDashboard,
-  Dice1,
-  Medal,
-  TrendingUp,
-  Scale,
-  Menu,
-  X,
-  Swords,
-  Award,
-  Radio,
-  Sparkles,
-  ChevronDown,
-  MoreHorizontal,
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { Trophy, LayoutDashboard, Medal, Radio, Menu, X, Swords } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
-import { NotificationPanel } from "@/components/ui/NotificationCenter";
+import UserMenu from "@/components/layout/UserMenu";
 import { useI18n } from "@/lib/i18n";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
-  const moreRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { t } = useI18n();
 
-  const primaryLinks = [
+  const links = [
     { href: "/tournaments", label: t.nav.tournaments, icon: Trophy },
     { href: "/live", label: t.nav.live, icon: Radio },
     { href: "/leaderboard", label: t.nav.leaderboard, icon: Medal },
     { href: "/dashboard", label: t.nav.dashboard, icon: LayoutDashboard },
-  ];
-
-  const moreLinks = [
-    { href: "/achievements", label: t.nav.achievements, icon: Award },
-    { href: "/predictions", label: t.nav.predictions, icon: Sparkles },
-    { href: "/roll", label: t.nav.roll, icon: Dice1 },
     { href: "/hall-of-fame", label: t.nav.hallOfFame, icon: Medal },
-    { href: "/meta", label: t.nav.meta, icon: TrendingUp },
-    { href: "/balance", label: t.nav.balance, icon: Scale },
   ];
 
-  const allLinks = [...primaryLinks, ...moreLinks];
-
-  // Close dropdown on click outside
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
-        setMoreOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
-    setMoreOpen(false);
   }, [pathname]);
 
   const isActive = (href: string) => pathname === href;
-  const isMoreActive = moreLinks.some((l) => isActive(l.href));
 
   return (
     <nav
@@ -94,7 +53,7 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-0.5">
-            {primaryLinks.map((link) => {
+            {links.map((link) => {
               const active = isActive(link.href);
               return (
                 <Link
@@ -129,87 +88,12 @@ export default function Navbar() {
                 </Link>
               );
             })}
-
-            {/* More dropdown */}
-            <div className="relative" ref={moreRef}>
-              <button
-                onClick={() => setMoreOpen(!moreOpen)}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
-                style={{
-                  color: isMoreActive ? "var(--gold)" : "var(--text-sub)",
-                  background: isMoreActive ? "rgba(200,155,60,0.08)" : "transparent",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isMoreActive) {
-                    e.currentTarget.style.background = "var(--hover-bg)";
-                    e.currentTarget.style.color = "var(--foreground)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isMoreActive) {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = "var(--text-sub)";
-                  }
-                }}
-              >
-                <MoreHorizontal size={14} />
-                <span>Ещё</span>
-                <ChevronDown
-                  size={12}
-                  style={{
-                    transform: moreOpen ? "rotate(180deg)" : "rotate(0)",
-                    transition: "transform 0.2s",
-                  }}
-                />
-              </button>
-
-              {moreOpen && (
-                <div
-                  className="absolute right-0 top-full mt-1 w-48 rounded-xl overflow-hidden shadow-2xl"
-                  style={{
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    animation: "fadeIn 0.15s ease-out",
-                  }}
-                >
-                  {moreLinks.map((link) => {
-                    const active = isActive(link.href);
-                    return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-[13px] font-medium transition-colors"
-                        style={{
-                          color: active ? "var(--gold)" : "var(--text-sub)",
-                          background: active ? "rgba(200,155,60,0.08)" : "transparent",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "var(--hover-bg)";
-                          e.currentTarget.style.color = "var(--foreground)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = active
-                            ? "rgba(200,155,60,0.08)"
-                            : "transparent";
-                          e.currentTarget.style.color = active
-                            ? "var(--gold)"
-                            : "var(--text-sub)";
-                        }}
-                      >
-                        <link.icon size={14} />
-                        {link.label}
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Right side */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
+            <UserMenu />
             <LanguageSwitcher />
-            <NotificationPanel />
             <ThemeToggle />
             <button
               className="md:hidden p-1.5 rounded-lg cursor-pointer"
@@ -234,7 +118,7 @@ export default function Navbar() {
           }}
         >
           <div className="px-3 py-2 space-y-0.5">
-            {allLinks.map((link) => {
+            {links.map((link) => {
               const active = isActive(link.href);
               return (
                 <Link
@@ -256,10 +140,6 @@ export default function Navbar() {
       )}
 
       <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-4px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
         @keyframes slideDown {
           from { max-height: 0; opacity: 0; }
           to { max-height: 600px; opacity: 1; }

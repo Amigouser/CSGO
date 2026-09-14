@@ -41,16 +41,13 @@ export default function TournamentCard({
   return (
     <Link href={`/tournaments/${id}`}>
       <div
-        className="rounded-xl overflow-hidden dota-card"
+        className="rounded-xl overflow-hidden game-card"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
         <div
           className="h-32 flex items-center justify-center"
           style={{
-            background:
-              game === "dota2"
-                ? "linear-gradient(135deg, #1a0808, #0d1117)"
-                : "linear-gradient(135deg, #081a0d, #0d1117)",
+            background: "linear-gradient(135deg, #081a0d, #0d1117)",
           }}
         >
           <Trophy size={48} style={{ color: "var(--gold)", opacity: 0.3 }} />
@@ -64,7 +61,7 @@ export default function TournamentCard({
               {statusLabels[status] || status}
             </span>
             <span className="text-xs" style={{ color: "var(--text-sub)" }}>
-              {game === "dota2" ? "Dota 2" : "CS2"}
+              CS2
             </span>
           </div>
           <h3 className="font-semibold text-sm mb-1" style={{ color: "var(--foreground)" }}>

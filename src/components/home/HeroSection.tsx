@@ -57,15 +57,9 @@ export default function HeroSection() {
           }}
         >
           <span className="flex items-center gap-3 justify-center">
-            <img
-              src="https://www.opendota.com/assets/images/dota2/rank_icons/rank_icon_8.png"
-              alt="Immortal"
-              width={36}
-              height={36}
-              style={{ objectFit: "contain" }}
-            />
+            <Trophy size={24} style={{ color: "var(--gold)" }} />
             <span className="hidden sm:inline">{t.hero.badge}</span>
-            <span className="sm:hidden">TomskGG — Dota 2 & CS2</span>
+            <span className="sm:hidden">TomskGG — CS2</span>
           </span>
         </div>
 

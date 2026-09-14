@@ -15,7 +15,7 @@ const mockActivities: Activity[] = [
   { id: "1", type: "registration", message: "ProPlayer_KG зарегистрировался на Winter Cup", time: "2 мин назад", icon: UserPlus },
   { id: "2", type: "match_result", message: "MidOrFeed победил BishkekBoss (2:1)", time: "5 мин назад", icon: Swords },
   { id: "3", type: "achievement", message: "CarryPlayer разблокировал 'Чемпион'", time: "12 мин назад", icon: Star },
-  { id: "4", type: "match_start", message: "Матч начался: DotaKing99 vs OfflaneKing", time: "15 мин назад", icon: Swords },
+  { id: "4", type: "match_start", message: "Матч начался: FragMaster99 vs OfflaneKing", time: "15 мин назад", icon: Swords },
   { id: "5", type: "registration", message: "SupportMain зарегистрировался на Swiss Challenge", time: "20 мин назад", icon: UserPlus },
 ];
 

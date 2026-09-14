@@ -18,13 +18,13 @@ export const en: Translations = {
   },
 
   hero: {
-    badge: "TomskGG — Dota 2 and CS2 tournaments",
+    badge: "TomskGG — CS2 tournaments",
     title1: "Organize",
     titleHighlight: "epic",
     title2: "tournaments in",
-    titleGame: "Dota 2 and CS2",
+    titleGame: "CS2",
     subtitle:
-      "Esports tournaments for Dota 2 and CS2 in Tomsk: Steam registration, team drafting, tournament brackets, global rankings and full statistics",
+      "Esports tournaments for CS2 in Tomsk: Steam registration, tournament brackets, global rankings and full statistics",
     viewTournaments: "View Tournaments",
     loginSteam: "Login with Steam",
   },
@@ -90,7 +90,7 @@ export const en: Translations = {
 
   tip: {
     title: "Tip",
-    text: "Make your Dota 2 lobby open — then match statistics (kills, heroes) will appear automatically",
+    text: "Connect your Steam account — then CS2 match statistics (kills, deaths, ADR) will appear automatically",
   },
 
   leaderboard: {
@@ -109,8 +109,8 @@ export const en: Translations = {
     matchesPlayed: "Matches Played",
     avgMmr: "Average MMR",
     recentMatches: "Recent Matches",
-    topHeroes: "Top Heroes",
-    picks: "picks",
+    topHeroes: "Top Weapons",
+    picks: "kills",
   },
 
   achievements: {
@@ -138,7 +138,7 @@ export const en: Translations = {
   },
 
   roll: {
-    title: "Hero Roll",
+    title: "Weapon Roll",
     roll: "Roll!",
     rolling: "Rolling...",
     history: "History",
@@ -148,7 +148,7 @@ export const en: Translations = {
     title: "Login with Steam",
     description: "Authorize to participate in tournaments and track statistics",
     tournaments: "Tournaments",
-    tournamentsDesc: "Participate in Dota 2 and CS2 tournaments",
+    tournamentsDesc: "Participate in CS2 tournaments",
     rating: "Rating",
     ratingDesc: "Compete and climb the rankings",
     teams: "Teams",

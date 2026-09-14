@@ -14,7 +14,8 @@ model User {
   avatar      String?
   profileUrl  String?
   mmr         Int      @default(1000)
-  rank        String   @default("Herald")
+  rank        String   @default("Silver I")
+  isAdmin     Boolean  @default(false)
   wins        Int      @default(0)
   losses      Int      @default(0)
   createdAt   DateTime @default(now())
@@ -89,6 +90,7 @@ model TournamentParticipant {
   tournamentId String
   teamName     String?
   seed         Int?
+  status       String   @default("pending")
   createdAt    DateTime @default(now())
 
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)

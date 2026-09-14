@@ -1,4 +1,4 @@
-export type Game = "dota2" | "cs2";
+export type Game = "cs2";
 
 export type TournamentFormat =
   | "single_elim"
@@ -15,21 +15,21 @@ export type TournamentStatus =
 export type MatchStatus = "pending" | "active" | "completed";
 
 export const RANKS = [
-  { name: "Herald", minMmr: 0, icon: "🥉" },
-  { name: "Guardian", minMmr: 770, icon: "🥉" },
-  { name: "Crusader", minMmr: 1540, icon: "🥈" },
-  { name: "Archon", minMmr: 2310, icon: "🥈" },
-  { name: "Legend", minMmr: 3080, icon: "🥇" },
-  { name: "Ancient", minMmr: 3850, icon: "🥇" },
-  { name: "Divine", minMmr: 4620, icon: "💎" },
-  { name: "Immortal", minMmr: 5420, icon: "👑" },
+  { name: "Silver I", minMmr: 0, icon: "🥉" },
+  { name: "Silver Elite", minMmr: 500, icon: "🥉" },
+  { name: "Gold Nova", minMmr: 1000, icon: "🥈" },
+  { name: "MG", minMmr: 1500, icon: "🥈" },
+  { name: "DMG", minMmr: 2000, icon: "🥇" },
+  { name: "Legendary Eagle", minMmr: 2500, icon: "🥇" },
+  { name: "Supreme", minMmr: 3500, icon: "💎" },
+  { name: "Global Elite", minMmr: 4500, icon: "👑" },
 ] as const;
 
 export function getRankByMmr(mmr: number): string {
   for (let i = RANKS.length - 1; i >= 0; i--) {
     if (mmr >= RANKS[i].minMmr) return RANKS[i].name;
   }
-  return "Herald";
+  return "Silver I";
 }
 
 export const FORMAT_LABELS: Record<TournamentFormat, string> = {
@@ -47,6 +47,5 @@ export const STATUS_LABELS: Record<TournamentStatus, string> = {
 };
 
 export const GAME_LABELS: Record<Game, string> = {
-  dota2: "Dota 2",
   cs2: "CS2",
 };

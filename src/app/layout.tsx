@@ -18,21 +18,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TomskGG — турниры по Dota 2 и CS2 в Томске",
+  title: "TomskGG — турниры по CS2 в Томске",
   description:
-    "TomskGG — киберспортивная платформа Томска: турниры по Dota 2 и CS2 (Counter-Strike 2) в Томске. Регистрация через Steam, автодрафт команд, турнирная сетка, рейтинг и статистика игроков.",
+    "TomskGG — киберспортивная платформа Томска: турниры по CS2 (Counter-Strike 2) в Томске. Регистрация через Steam, турнирная сетка, рейтинг и статистика игроков.",
   keywords: [
     "TomskGG",
-    "турниры по доте",
-    "dota 2 турниры Томск",
     "cs2 турниры Томск",
+    "counter-strike 2 турниры",
     "киберспорт Томск",
     "киберспорт Томская область",
   ],
   openGraph: {
-    title: "TomskGG — турниры по Dota 2 и CS2 в Томске",
+    title: "TomskGG — турниры по CS2 в Томске",
     description:
-      "TomskGG — киберспортивная платформа Томска: турниры по Dota 2 и CS2 в Томске.",
+      "TomskGG — киберспортивная платформа Томска: турниры по CS2 в Томске.",
     url: "https://tomskgg.ru",
     siteName: "TomskGG",
     locale: "ru_RU",
@@ -72,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               alternateName: "Tomsk Gaming",
               url: "https://tomskgg.ru",
               description:
-                "TomskGG — киберспортивная платформа Томска: турниры по Dota 2 и CS2 в Томске.",
+                "TomskGG — киберспортивная платформа Томска: турниры по CS2 в Томске.",
               areaServed: { "@type": "City", name: "Томск" },
               address: {
                 "@type": "PostalAddress",

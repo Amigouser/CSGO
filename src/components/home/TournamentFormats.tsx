@@ -37,7 +37,7 @@ export default function TournamentFormats() {
         {formats.map((fmt) => (
           <div
             key={fmt.title}
-            className="p-5 rounded-xl dota-card"
+            className="p-5 rounded-xl game-card"
             style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
           >
             <div className="flex items-start gap-3 mb-3">

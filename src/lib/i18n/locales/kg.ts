@@ -18,13 +18,13 @@ export const kg: Translations = {
   },
 
   hero: {
-    badge: "TomskGG — Dota 2 жана CS2 турнирлери",
+    badge: "TomskGG — CS2 турнирлери",
     title1: "Уюштур",
     titleHighlight: "эпикалык",
     title2: "турнирлер",
-    titleGame: "Dota 2 жана CS2",
+    titleGame: "CS2",
     subtitle:
-      "Томсктогы Dota 2 жана CS2 киберспорт турнирлери: Steam аркылуу катталуу, командаларды тандоо, турнир тору, глобалдык рейтинг жана толук статистика",
+      "Томсктогы CS2 киберспорт турнирлери: Steam аркылуу катталуу, турнир тору, глобалдык рейтинг жана толук статистика",
     viewTournaments: "Турнирлерди көрүү",
     loginSteam: "Steam аркылуу кирүү",
   },
@@ -90,7 +90,7 @@ export const kg: Translations = {
 
   tip: {
     title: "Кеңеш",
-    text: "Dota 2де лоббини ачык кыл — анда матч статистикасы (өлтүрүүлөр, каармандар) автоматтык түрдө пайда болот",
+    text: "Steam аккаунтуңду туташтыр — анда CS2 матч статистикасы (өлтүрүүлөр, өлүмдөр, ADR) автоматтык түрдө пайда болот",
   },
 
   leaderboard: {
@@ -109,8 +109,8 @@ export const kg: Translations = {
     matchesPlayed: "Ойнолгон матчтар",
     avgMmr: "Орточо MMR",
     recentMatches: "Акыркы матчтар",
-    topHeroes: "Топ каармандар",
-    picks: "таңдоо",
+    topHeroes: "Топ курал",
+    picks: "өлтүрүү",
   },
 
   achievements: {
@@ -138,7 +138,7 @@ export const kg: Translations = {
   },
 
   roll: {
-    title: "Каарманды тандоо",
+    title: "Куралды тандоо",
     roll: "Тандоо!",
     rolling: "Тандоо...",
     history: "Тарых",
@@ -148,7 +148,7 @@ export const kg: Translations = {
     title: "Steam аркылуу кирүү",
     description: "Турнирлерге катышуу жана статистиканы көзөмөлдөө үчүн авторизациялан",
     tournaments: "Турнирлер",
-    tournamentsDesc: "Dota 2 жана CS2 турнирлерине катыш",
+    tournamentsDesc: "CS2 турнирлерине катыш",
     rating: "Рейтинг",
     ratingDesc: "Атаандаш жана рейтингде көтөрүл",
     teams: "Командалар",

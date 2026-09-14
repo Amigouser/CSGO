@@ -1,7 +1,7 @@
 import { Trophy, Shield, Users, BarChart3 } from "lucide-react";
 
 const features = [
-  { icon: Trophy, title: "Турниры", desc: "Участвуй в турнирах по Dota 2 и CS2" },
+  { icon: Trophy, title: "Турниры", desc: "Участвуй в турнирах по CS2" },
   { icon: Shield, title: "Рейтинг", desc: "Соревнуйся и поднимайся в рейтинге" },
   { icon: Users, title: "Команды", desc: "Находи тиммейтов и создавай команды" },
   { icon: BarChart3, title: "Статистика", desc: "Отслеживай свою статистику" },
@@ -31,7 +31,7 @@ export default function LoginPage() {
           style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
         >
           <a
-            href="/api/auth/signin"
+            href="/api/steam/login"
             className="w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl font-bold text-sm transition-all glow-gold"
             style={{
               background: "linear-gradient(135deg, var(--gold), var(--gold-light))",

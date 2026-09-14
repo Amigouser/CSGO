@@ -4,27 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [
-    {
-      id: "steam",
-      name: "Steam",
-      type: "oidc",
-      issuer: "https://steamcommunity.com/openid",
-      clientId: "https://steamcommunity.com/openid",
-      clientSecret: "",
-      authorization: { params: { scope: "openid" } },
-      profile(profile: Record<string, string>) {
-        const steamId = profile.sub?.split("/").pop() || "";
-        return {
-          id: steamId,
-          steamId,
-          nickname: profile.nickname || `Player_${steamId.slice(-6)}`,
-          avatar: null,
-          profileUrl: `https://steamcommunity.com/profiles/${steamId}`,
-        };
-      },
-    },
-  ],
+  providers: [],
   callbacks: {
     async session({ session, user }) {
       if (session.user) {
@@ -39,9 +19,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session;
     },
-  },
-  pages: {
-    signIn: "/login",
   },
   session: { strategy: "database" },
 });

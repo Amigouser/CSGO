@@ -1,44 +1,54 @@
-"use client";
-
-import { useState } from "react";
-import Link from "next/link";
 import {
   Trophy,
   Users,
   Calendar,
   ArrowLeft,
   Swords,
-  Clock,
   Award,
 } from "lucide-react";
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { notFound } from "next/navigation";
+import { getCurrentUser } from "@/lib/session";
+import RegisterButton from "./RegisterButton";
 
-const mockTournament = {
-  id: "1",
-  name: "INTKG Winter Cup 2026",
-  game: "dota2",
-  format: "double_elim",
-  status: "registration",
-  maxTeams: 16,
-  teamSize: 5,
-  description:
-    "Зимний кубок по Dota 2. Double Elimination формат с призовым фондом. Регистрация открыта!",
-  startDate: "2026-02-15T18:00:00",
-  prizePool: "50,000 сом",
-  participants: [
-    { id: "1", nickname: "ProPlayer_KG", mmr: 5800, rank: "Immortal" },
-    { id: "2", nickname: "BishkekBoss", mmr: 4200, rank: "Ancient" },
-    { id: "3", nickname: "DotaKing99", mmr: 3500, rank: "Legend" },
-    { id: "4", nickname: "KyrgyzWarrior", mmr: 2800, rank: "Archon" },
-    { id: "5", nickname: "MidOrFeed", mmr: 5100, rank: "Divine" },
-    { id: "6", nickname: "SupportMain", mmr: 3900, rank: "Legend" },
-    { id: "7", nickname: "CarryPlayer", mmr: 4600, rank: "Ancient" },
-    { id: "8", nickname: "OfflaneKing", mmr: 3200, rank: "Archon" },
-  ],
+const statusLabels: Record<string, string> = {
+  upcoming: "Скоро",
+  registration: "Регистрация",
+  active: "Активный",
+  completed: "Завершён",
 };
 
-export default function TournamentDetailPage() {
-  const [activeTab, setActiveTab] = useState<"info" | "bracket" | "participants">("info");
-  const t = mockTournament;
+const formatLabels: Record<string, string> = {
+  single_elim: "Single Elimination",
+  double_elim: "Double Elimination",
+  swiss: "Swiss System",
+  groups_playoffs: "Groups + Playoffs",
+};
+
+export default async function TournamentDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  const tournament = await prisma.tournament.findUnique({
+    where: { id },
+    include: {
+      participants: { include: { user: true } },
+    },
+  });
+
+  if (!tournament) notFound();
+
+  const user = await getCurrentUser();
+  const myParticipation = user
+    ? tournament.participants.find((p) => p.userId === user.id)
+    : null;
+  const registrationStatus = myParticipation?.status || null;
+  const approvedCount = tournament.participants.filter((p) => p.status === "approved").length;
+  const isFull = approvedCount >= tournament.maxTeams;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -66,198 +76,111 @@ export default function TournamentDetailPage() {
                 className="text-xs px-2 py-0.5 rounded-full font-medium"
                 style={{ background: "rgba(200,155,60,0.15)", color: "var(--gold)" }}
               >
-                Регистрация
+                {statusLabels[tournament.status] || tournament.status}
               </span>
-              <span className="text-xs" style={{ color: "var(--text-sub)" }}>
-                {t.game === "dota2" ? "Dota 2" : "CS2"}
-              </span>
+              <span className="text-xs" style={{ color: "var(--text-sub)" }}>CS2</span>
             </div>
             <h1 className="text-2xl font-bold mb-2" style={{ color: "var(--foreground)" }}>
-              {t.name}
+              {tournament.name}
             </h1>
-            <p className="text-sm" style={{ color: "var(--text-sub)" }}>
-              {t.description}
-            </p>
+            {tournament.description && (
+              <p className="text-sm" style={{ color: "var(--text-sub)" }}>
+                {tournament.description}
+              </p>
+            )}
           </div>
-          <button
-            className="px-6 py-3 rounded-xl font-bold text-sm glow-gold cursor-pointer"
-            style={{
-              background: "linear-gradient(135deg, var(--gold), var(--gold-light))",
-              color: "var(--background)",
-            }}
-          >
-            Зарегистрироваться
-          </button>
+          <RegisterButton
+            tournamentId={tournament.id}
+            registrationStatus={registrationStatus}
+            isFull={isFull}
+            isOpen={tournament.status === "registration"}
+            isLoggedIn={!!user}
+          />
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
           <div className="flex items-center gap-2">
             <Users size={16} style={{ color: "var(--gold)" }} />
             <div>
-              <div className="text-xs" style={{ color: "var(--text-sub)" }}>
-                Участники
-              </div>
+              <div className="text-xs" style={{ color: "var(--text-sub)" }}>Участники</div>
               <div className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
-                {t.participants.length}/{t.maxTeams}
+                {tournament.participants.length}/{tournament.maxTeams}
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Calendar size={16} style={{ color: "var(--gold)" }} />
             <div>
-              <div className="text-xs" style={{ color: "var(--text-sub)" }}>
-                Дата
-              </div>
+              <div className="text-xs" style={{ color: "var(--text-sub)" }}>Дата</div>
               <div className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
-                {new Date(t.startDate).toLocaleDateString("ru-RU")}
+                {new Date(tournament.startDate).toLocaleDateString("ru-RU")}
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Award size={16} style={{ color: "var(--gold)" }} />
-            <div>
-              <div className="text-xs" style={{ color: "var(--text-sub)" }}>
-                Призовой фонд
-              </div>
-              <div className="text-sm font-semibold" style={{ color: "var(--gold)" }}>
-                {t.prizePool}
+          {tournament.prizePool && (
+            <div className="flex items-center gap-2">
+              <Award size={16} style={{ color: "var(--gold)" }} />
+              <div>
+                <div className="text-xs" style={{ color: "var(--text-sub)" }}>Призовой фонд</div>
+                <div className="text-sm font-semibold" style={{ color: "var(--gold)" }}>
+                  {tournament.prizePool}
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center gap-2">
             <Swords size={16} style={{ color: "var(--gold)" }} />
             <div>
-              <div className="text-xs" style={{ color: "var(--text-sub)" }}>
-                Формат
-              </div>
+              <div className="text-xs" style={{ color: "var(--text-sub)" }}>Формат</div>
               <div className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
-                Double Elim
+                {formatLabels[tournament.format] || tournament.format}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 mb-6" style={{ borderBottom: "1px solid var(--border)" }}>
-        {(["info", "bracket", "participants"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className="px-4 py-2 text-sm font-medium transition-all cursor-pointer"
-            style={{
-              color: activeTab === tab ? "var(--gold)" : "var(--text-sub)",
-              borderBottom: activeTab === tab ? "2px solid var(--gold)" : "2px solid transparent",
-            }}
-          >
-            {tab === "info" ? "Информация" : tab === "bracket" ? "Сетка" : "Участники"}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab content */}
-      {activeTab === "info" && (
-        <div
-          className="rounded-xl p-6"
-          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-        >
-          <h3 className="font-semibold mb-4" style={{ color: "var(--foreground)" }}>
-            О турнире
-          </h3>
-          <div className="space-y-3 text-sm" style={{ color: "var(--text-sub)" }}>
-            <p>
-              <strong style={{ color: "var(--foreground)" }}>Формат:</strong> Double Elimination
-            </p>
-            <p>
-              <strong style={{ color: "var(--foreground)" }}>Размер команды:</strong> {t.teamSize}{" "}
-              игроков
-            </p>
-            <p>
-              <strong style={{ color: "var(--foreground)" }}>Начало:</strong>{" "}
-              {new Date(t.startDate).toLocaleString("ru-RU")}
-            </p>
-            <p>
-              <strong style={{ color: "var(--foreground)" }}>Призовой фонд:</strong> {t.prizePool}
-            </p>
-          </div>
+      {/* Participants */}
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+      >
+        <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--border)" }}>
+          <h2 className="text-sm font-bold" style={{ color: "var(--foreground)" }}>
+            Участники ({approvedCount})
+          </h2>
         </div>
-      )}
-
-      {activeTab === "bracket" && (
-        <div
-          className="rounded-xl p-6"
-          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-        >
-          <h3 className="font-semibold mb-4" style={{ color: "var(--foreground)" }}>
-            Турнирная сетка
-          </h3>
-          <div className="text-center py-8">
-            <Swords size={48} style={{ color: "var(--text-sub)", margin: "0 auto 16px" }} />
-            <p style={{ color: "var(--text-sub)" }}>
-              Сетка будет сгенерирована после начала турнира
-            </p>
+        {approvedCount === 0 ? (
+          <div className="p-8 text-center">
+            <p style={{ color: "var(--text-sub)" }}>Пока нет одобренных участников</p>
           </div>
-        </div>
-      )}
-
-      {activeTab === "participants" && (
-        <div
-          className="rounded-xl overflow-hidden"
-          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-        >
+        ) : (
           <table className="w-full">
             <thead>
               <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                <th
-                  className="px-4 py-3 text-left text-xs font-medium uppercase"
-                  style={{ color: "var(--text-sub)" }}
-                >
-                  #
-                </th>
-                <th
-                  className="px-4 py-3 text-left text-xs font-medium uppercase"
-                  style={{ color: "var(--text-sub)" }}
-                >
-                  Игрок
-                </th>
-                <th
-                  className="px-4 py-3 text-left text-xs font-medium uppercase"
-                  style={{ color: "var(--text-sub)" }}
-                >
-                  MMR
-                </th>
-                <th
-                  className="px-4 py-3 text-left text-xs font-medium uppercase"
-                  style={{ color: "var(--text-sub)" }}
-                >
-                  Ранг
-                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>#</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Игрок</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>MMR</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Ранг</th>
               </tr>
             </thead>
             <tbody>
-              {t.participants.map((p, i) => (
-                <tr
-                  key={p.id}
-                  style={{ borderBottom: "1px solid var(--border)" }}
-                >
-                  <td className="px-4 py-3 text-sm" style={{ color: "var(--text-sub)" }}>
-                    {i + 1}
-                  </td>
+              {tournament.participants
+                .filter((p) => p.status === "approved")
+                .map((p, i) => (
+                <tr key={p.id} style={{ borderBottom: "1px solid var(--border)" }}>
+                  <td className="px-4 py-3 text-sm" style={{ color: "var(--text-sub)" }}>{i + 1}</td>
                   <td className="px-4 py-3 text-sm font-medium" style={{ color: "var(--foreground)" }}>
-                    {p.nickname}
+                    {p.user.nickname}
                   </td>
-                  <td className="px-4 py-3 text-sm" style={{ color: "var(--gold)" }}>
-                    {p.mmr}
-                  </td>
-                  <td className="px-4 py-3 text-sm" style={{ color: "var(--text-sub)" }}>
-                    {p.rank}
-                  </td>
+                  <td className="px-4 py-3 text-sm" style={{ color: "var(--gold)" }}>{p.user.mmr}</td>
+                  <td className="px-4 py-3 text-sm" style={{ color: "var(--text-sub)" }}>{p.user.rank}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

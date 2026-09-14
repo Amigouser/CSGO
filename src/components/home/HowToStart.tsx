@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Trophy, Swords } from "lucide-react";
+import { Trophy, Swords, Award } from "lucide-react";
 
 const steps = [
   {
@@ -34,15 +34,7 @@ const steps = [
     desc: "Запишись на турнир и жди начала драфта",
     link: "/tournaments",
     linkText: "Записаться",
-    icon: (
-      <img
-        src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/aegis.png"
-        alt="Aegis"
-        width={32}
-        height={32}
-        style={{ objectFit: "contain" }}
-      />
-    ),
+    icon: <Award size={32} style={{ color: "var(--gold)" }} />,
   },
   {
     num: 4,

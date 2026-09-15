@@ -9,6 +9,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
+import FaceitRefreshButton from "@/components/ui/FaceitRefreshButton";
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -19,6 +20,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     if (!me) redirect("/login");
     redirect(`/profile/${me.steamId}`);
   }
+
+  const currentUser = await getCurrentUser();
 
   const user = await prisma.user.findFirst({
     where: { OR: [{ steamId: lookupId }, { id: lookupId }] },
@@ -68,9 +71,17 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
             )}
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--foreground)" }}>
-              {user.nickname}
-            </h1>
+            <div className="flex items-center gap-3 mb-1">
+              <h1 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
+                {user.nickname}
+              </h1>
+            </div>
+            <FaceitRefreshButton
+              currentUserId={currentUser?.id ?? null}
+              profileUserId={user.id}
+              faceitLevel={user.faceitLevel}
+              faceitElo={user.faceitElo}
+            />
             <p className="text-sm mb-3" style={{ color: "var(--text-sub)" }}>
               Steam ID: {user.steamId}
             </p>
@@ -115,6 +126,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
           { label: "Турниров", value: user.tournaments.length, icon: Trophy, color: "var(--gold)" },
           { label: "Матчей", value: totalGames, icon: Swords, color: "#4fc3f7" },
           { label: "Побед", value: user.wins, icon: TrendingUp, color: "#52b788" },
+          ...(user.faceitLevel > 0 ? [{ label: "FACEIT", value: `Lvl ${user.faceitLevel} / ${user.faceitElo} ELO`, icon: TrendingUp, color: "#f97316" }] : [{ label: "FACEIT", value: "Не привязан", icon: TrendingUp, color: "var(--text-sub)" }]),
           {
             label: "На платформе",
             value: `${daysOnPlatform} дн.`,

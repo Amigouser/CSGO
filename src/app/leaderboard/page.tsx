@@ -1,5 +1,6 @@
 import { Trophy, Search, Medal, Crown, Award } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import FaceitBadge from "@/components/ui/FaceitBadge";
 
 const rankIcons: Record<string, string> = {
   "Global Elite": "👑",
@@ -41,6 +42,7 @@ export default async function LeaderboardPage() {
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Игрок</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>MMR</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Ранг</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>FACEIT</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>W/L</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Винрейт</th>
               </tr>
@@ -79,6 +81,13 @@ export default async function LeaderboardPage() {
                       <span className="text-sm">
                         {rankIcons[p.rank] || "🥉"} {p.rank}
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.faceitLevel > 0 ? (
+                        <FaceitBadge level={p.faceitLevel} size="sm" />
+                      ) : (
+                        <span className="text-xs" style={{ color: "var(--text-sub)" }}>—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-sm" style={{ color: "var(--text-sub)" }}>

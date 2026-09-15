@@ -9,9 +9,11 @@ interface Props {
   isFull: boolean;
   isOpen: boolean;
   isLoggedIn: boolean;
+  minFaceitLevel?: number;
+  userFaceitLevel?: number;
 }
 
-export default function RegisterButton({ tournamentId, registrationStatus, isFull, isOpen, isLoggedIn }: Props) {
+export default function RegisterButton({ tournamentId, registrationStatus, isFull, isOpen, isLoggedIn, minFaceitLevel = 0, userFaceitLevel = 0 }: Props) {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(registrationStatus);
   const [error, setError] = useState("");
@@ -41,6 +43,19 @@ export default function RegisterButton({ tournamentId, registrationStatus, isFul
       <span className="px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-1.5" style={{ background: "rgba(200,155,60,0.15)", color: "var(--gold)" }}>
         ⏳ Ожидает подтверждения
       </span>
+    );
+  }
+
+  if (minFaceitLevel > 0 && userFaceitLevel < minFaceitLevel) {
+    return (
+      <div className="flex flex-col items-end gap-1">
+        <span className="px-6 py-3 rounded-xl font-bold text-sm" style={{ background: "rgba(229,83,75,0.15)", color: "var(--red)" }}>
+          Требуется FACEIT {minFaceitLevel}+
+        </span>
+        <span className="text-xs" style={{ color: "var(--text-sub)" }}>
+          Ваш уровень: {userFaceitLevel || "нет"}
+        </span>
+      </div>
     );
   }
 

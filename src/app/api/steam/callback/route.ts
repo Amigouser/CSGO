@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import crypto from "crypto";
+import { getFaceitPlayer } from "@/lib/faceit";
 
 const STEAM_OPENID_URL = "https://steamcommunity.com/openid/login";
 
@@ -80,15 +81,27 @@ export async function GET(request: NextRequest) {
   const adminIds = (process.env.ADMIN_STEAM_IDS || "").split(",").map((s) => s.trim()).filter(Boolean);
   const isAdmin = adminIds.includes(steamId);
 
+  const faceit = await getFaceitPlayer(steamId);
+
   let user = await prisma.user.findUnique({ where: { steamId } });
   if (!user) {
     user = await prisma.user.create({
-      data: { steamId, nickname, avatar, profileUrl, isAdmin },
+      data: {
+        steamId, nickname, avatar, profileUrl, isAdmin,
+        faceitId: faceit?.faceitId ?? null,
+        faceitLevel: faceit?.level ?? 0,
+        faceitElo: faceit?.elo ?? 0,
+      },
     });
   } else {
     user = await prisma.user.update({
       where: { id: user.id },
-      data: { nickname, avatar, profileUrl, isAdmin },
+      data: {
+        nickname, avatar, profileUrl, isAdmin,
+        faceitId: faceit?.faceitId ?? user.faceitId,
+        faceitLevel: faceit?.level ?? user.faceitLevel,
+        faceitElo: faceit?.elo ?? user.faceitElo,
+      },
     });
   }
 

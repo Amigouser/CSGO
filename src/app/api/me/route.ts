@@ -13,5 +13,7 @@ export async function GET() {
     mmr: user.mmr,
     rank: user.rank,
     isAdmin: user.isAdmin,
+    faceitLevel: user.faceitLevel,
+    faceitElo: user.faceitElo,
   });
 }

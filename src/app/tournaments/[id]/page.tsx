@@ -11,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import RegisterButton from "./RegisterButton";
+import FaceitBadge from "@/components/ui/FaceitBadge";
 
 const statusLabels: Record<string, string> = {
   upcoming: "Скоро",
@@ -24,6 +25,12 @@ const formatLabels: Record<string, string> = {
   double_elim: "Double Elimination",
   swiss: "Swiss System",
   groups_playoffs: "Groups + Playoffs",
+};
+
+const gameModeLabels: Record<string, string> = {
+  "1v1": "1 vs 1",
+  "2v2": "2 vs 2",
+  "5v5": "5 vs 5",
 };
 
 export default async function TournamentDetailPage({
@@ -71,14 +78,22 @@ export default async function TournamentDetailPage({
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <span
                 className="text-xs px-2 py-0.5 rounded-full font-medium"
                 style={{ background: "rgba(200,155,60,0.15)", color: "var(--gold)" }}
               >
                 {statusLabels[tournament.status] || tournament.status}
               </span>
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(79,195,247,0.15)", color: "#4fc3f7" }}>
+                {gameModeLabels[tournament.gameMode] || tournament.gameMode}
+              </span>
               <span className="text-xs" style={{ color: "var(--text-sub)" }}>CS2</span>
+              {tournament.minFaceitLevel > 0 && (
+                <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(249,115,22,0.15)", color: "#f97316" }}>
+                  FACEIT {tournament.minFaceitLevel}+
+                </span>
+              )}
             </div>
             <h1 className="text-2xl font-bold mb-2" style={{ color: "var(--foreground)" }}>
               {tournament.name}
@@ -95,6 +110,8 @@ export default async function TournamentDetailPage({
             isFull={isFull}
             isOpen={tournament.status === "registration"}
             isLoggedIn={!!user}
+            minFaceitLevel={tournament.minFaceitLevel}
+            userFaceitLevel={user?.faceitLevel ?? 0}
           />
         </div>
 
@@ -160,6 +177,7 @@ export default async function TournamentDetailPage({
               <tr style={{ borderBottom: "1px solid var(--border)" }}>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>#</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Игрок</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>FACEIT</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>MMR</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Ранг</th>
               </tr>
@@ -172,6 +190,13 @@ export default async function TournamentDetailPage({
                   <td className="px-4 py-3 text-sm" style={{ color: "var(--text-sub)" }}>{i + 1}</td>
                   <td className="px-4 py-3 text-sm font-medium" style={{ color: "var(--foreground)" }}>
                     {p.user.nickname}
+                  </td>
+                  <td className="px-4 py-3">
+                    {p.user.faceitLevel > 0 ? (
+                      <FaceitBadge level={p.user.faceitLevel} size="sm" />
+                    ) : (
+                      <span className="text-xs" style={{ color: "var(--text-sub)" }}>—</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-sm" style={{ color: "var(--gold)" }}>{p.user.mmr}</td>
                   <td className="px-4 py-3 text-sm" style={{ color: "var(--text-sub)" }}>{p.user.rank}</td>

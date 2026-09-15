@@ -18,6 +18,9 @@ model User {
   isAdmin     Boolean  @default(false)
   wins        Int      @default(0)
   losses      Int      @default(0)
+  faceitId    String?
+  faceitLevel Int      @default(0)
+  faceitElo   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -65,20 +68,22 @@ model VerificationToken {
 }
 
 model Tournament {
-  id          String   @id @default(cuid())
-  name        String
-  game        String
-  format      String
-  status      String   @default("upcoming")
-  maxTeams    Int
-  teamSize    Int      @default(5)
-  description String?
-  imageUrl    String?
-  startDate   DateTime
-  endDate     DateTime?
-  prizePool   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String
+  game           String
+  gameMode       String   @default("5v5")
+  format         String
+  status         String   @default("upcoming")
+  maxTeams       Int
+  teamSize       Int      @default(5)
+  minFaceitLevel Int      @default(0)
+  description    String?
+  imageUrl       String?
+  startDate      DateTime
+  endDate        DateTime?
+  prizePool      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   participants TournamentParticipant[]
   matches      Match[]

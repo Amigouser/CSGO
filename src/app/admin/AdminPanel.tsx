@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Trophy, Trash2, Play, UserCheck, UserX, Users, Clock, CheckCircle, XCircle } from "lucide-react";
+import FaceitBadge from "@/components/ui/FaceitBadge";
 
 interface Participant {
   id: string;
@@ -10,16 +11,18 @@ interface Participant {
   tournamentId: string;
   teamName: string | null;
   status: string;
-  user: { id: string; nickname: string; steamId: string; mmr: number; rank: string };
+  user: { id: string; nickname: string; steamId: string; mmr: number; rank: string; faceitLevel: number; faceitElo: number };
 }
 
 interface Tournament {
   id: string;
   name: string;
   game: string;
+  gameMode: string;
   format: string;
   status: string;
   maxTeams: number;
+  minFaceitLevel: number;
   startDate: string;
   participants: Participant[];
 }
@@ -168,8 +171,12 @@ export default function AdminPanel({ tournaments }: { tournaments: Tournament[] 
                         {statusLabels[t.status] || t.status}
                       </span>
                     </div>
-                    <div className="text-xs flex gap-3" style={{ color: "var(--text-sub)" }}>
+                    <div className="text-xs flex gap-3 flex-wrap" style={{ color: "var(--text-sub)" }}>
                       <span className="flex items-center gap-1"><Users size={12} /> {approved.length}/{t.maxTeams} одобрено</span>
+                      <span className="px-1.5 py-0.5 rounded text-[11px] font-medium" style={{ background: "rgba(79,195,247,0.15)", color: "#4fc3f7" }}>{t.gameMode}</span>
+                      {t.minFaceitLevel > 0 && (
+                        <span className="px-1.5 py-0.5 rounded text-[11px] font-medium" style={{ background: "rgba(249,115,22,0.15)", color: "#f97316" }}>FACEIT {t.minFaceitLevel}+</span>
+                      )}
                       {pending.length > 0 && <span className="flex items-center gap-1" style={{ color: "var(--gold)" }}><Clock size={12} /> {pending.length} ожидают</span>}
                     </div>
                   </div>
@@ -204,9 +211,10 @@ export default function AdminPanel({ tournaments }: { tournaments: Tournament[] 
                     <div className="space-y-2">
                       {pending.map((p) => (
                         <div key={p.id} className="flex items-center justify-between p-3 rounded-lg" style={{ background: "var(--hover-bg)" }}>
-                          <div>
+                          <div className="flex items-center gap-2">
                             <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{p.user.nickname}</span>
-                            <span className="text-xs ml-2" style={{ color: "var(--text-sub)" }}>{p.user.mmr} MMR · {p.user.rank}</span>
+                            {p.user.faceitLevel > 0 && <FaceitBadge level={p.user.faceitLevel} size="sm" />}
+                            <span className="text-xs" style={{ color: "var(--text-sub)" }}>{p.user.mmr} MMR · {p.user.rank}</span>
                           </div>
                           <div className="flex gap-2">
                             <button
@@ -243,6 +251,7 @@ export default function AdminPanel({ tournaments }: { tournaments: Tournament[] 
                         <div key={p.id} className="flex items-center justify-between p-2 rounded-lg" style={{ background: "var(--hover-bg)" }}>
                           <div className="flex items-center gap-2">
                             <span className="text-sm" style={{ color: "var(--foreground)" }}>{p.user.nickname}</span>
+                            {p.user.faceitLevel > 0 && <FaceitBadge level={p.user.faceitLevel} size="sm" />}
                             <span className="text-xs" style={{ color: "var(--text-sub)" }}>{p.user.mmr} MMR</span>
                           </div>
                           <button

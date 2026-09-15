@@ -24,6 +24,12 @@ const formatLabels: Record<string, string> = {
   groups_playoffs: "Groups + Playoffs",
 };
 
+const gameModeLabels: Record<string, string> = {
+  "1v1": "1v1",
+  "2v2": "2v2",
+  "5v5": "5v5",
+};
+
 export default async function TournamentsPage() {
   const [tournaments, user] = await Promise.all([
     prisma.tournament.findMany({
@@ -76,15 +82,27 @@ export default async function TournamentsPage() {
                   </div>
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span
-                        className="text-xs px-2 py-0.5 rounded-full font-medium"
-                        style={{ background: sc.bg, color: sc.text }}
-                      >
-                        {statusLabels[t.status] || t.status}
-                      </span>
-                      <span className="text-xs" style={{ color: "var(--text-sub)" }}>
-                        {formatLabels[t.format] || t.format}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className="text-xs px-2 py-0.5 rounded-full font-medium"
+                          style={{ background: sc.bg, color: sc.text }}
+                        >
+                          {statusLabels[t.status] || t.status}
+                        </span>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(79,195,247,0.15)", color: "#4fc3f7" }}>
+                          {gameModeLabels[t.gameMode] || t.gameMode}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        {t.minFaceitLevel > 0 && (
+                          <span className="text-xs font-medium" style={{ color: "#f97316" }}>
+                            FACEIT {t.minFaceitLevel}+
+                          </span>
+                        )}
+                        <span className="text-xs" style={{ color: "var(--text-sub)" }}>
+                          {formatLabels[t.format] || t.format}
+                        </span>
+                      </div>
                     </div>
                     <h3 className="font-semibold text-sm mb-1" style={{ color: "var(--foreground)" }}>
                       {t.name}

@@ -26,6 +26,13 @@ export async function POST(
     return NextResponse.json({ error: "Registration is closed" }, { status: 400 });
   }
 
+  if (tournament.minFaceitLevel > 0 && user.faceitLevel < tournament.minFaceitLevel) {
+    return NextResponse.json(
+      { error: `Требуется FACEIT уровень ${tournament.minFaceitLevel}+. Ваш уровень: ${user.faceitLevel}` },
+      { status: 403 }
+    );
+  }
+
   if (tournament._count.participants >= tournament.maxTeams) {
     return NextResponse.json({ error: "Tournament is full" }, { status: 400 });
   }

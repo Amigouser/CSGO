@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { LogOut, User, ShieldPlus, LayoutDashboard } from "lucide-react";
+import FaceitBadge from "@/components/ui/FaceitBadge";
 
 interface UserData {
   id: string;
@@ -12,6 +13,8 @@ interface UserData {
   mmr: number;
   rank: string;
   isAdmin: boolean;
+  faceitLevel: number;
+  faceitElo: number;
 }
 
 export default function UserMenu() {
@@ -69,6 +72,9 @@ export default function UserMenu() {
         <span className="text-[13px] font-medium hidden sm:block" style={{ color: "var(--foreground)" }}>
           {user.nickname}
         </span>
+        {user.faceitLevel > 0 && (
+          <FaceitBadge level={user.faceitLevel} size="sm" />
+        )}
       </button>
 
       {open && (
@@ -81,7 +87,12 @@ export default function UserMenu() {
           }}
         >
           <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--border)" }}>
-            <div className="text-sm font-bold" style={{ color: "var(--foreground)" }}>{user.nickname}</div>
+            <div className="flex items-center gap-2">
+              <div className="text-sm font-bold" style={{ color: "var(--foreground)" }}>{user.nickname}</div>
+              {user.faceitLevel > 0 && (
+                <FaceitBadge level={user.faceitLevel} elo={user.faceitElo} size="sm" showElo />
+              )}
+            </div>
             <div className="text-xs" style={{ color: "var(--text-sub)" }}>
               {user.rank} · {user.mmr.toLocaleString()} MMR
               {user.isAdmin && <span style={{ color: "var(--gold)" }}> · Админ</span>}

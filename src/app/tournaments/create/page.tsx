@@ -18,9 +18,11 @@ export default function CreateTournamentPage() {
     const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get("name"),
+      gameMode: formData.get("gameMode"),
       format: formData.get("format"),
       maxTeams: formData.get("maxTeams"),
       teamSize: formData.get("teamSize"),
+      minFaceitLevel: formData.get("minFaceitLevel"),
       description: formData.get("description"),
       startDate: formData.get("startDate"),
       prizePool: formData.get("prizePool"),
@@ -80,7 +82,22 @@ export default function CreateTournamentPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--foreground)" }}>
+                Режим *
+              </label>
+              <select
+                name="gameMode"
+                required
+                className="w-full px-4 py-2.5 rounded-lg text-sm"
+                style={{ background: "var(--hover-bg)", border: "1px solid var(--border)", color: "var(--foreground)" }}
+              >
+                <option value="5v5">5 vs 5</option>
+                <option value="2v2">2 vs 2</option>
+                <option value="1v1">1 vs 1</option>
+              </select>
+            </div>
             <div>
               <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--foreground)" }}>
                 Формат *
@@ -114,7 +131,7 @@ export default function CreateTournamentPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--foreground)" }}>
                 Размер команды
@@ -128,6 +145,28 @@ export default function CreateTournamentPage() {
                 className="w-full px-4 py-2.5 rounded-lg text-sm"
                 style={{ background: "var(--hover-bg)", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--foreground)" }}>
+                Мин. FACEIT ур.
+              </label>
+              <select
+                name="minFaceitLevel"
+                className="w-full px-4 py-2.5 rounded-lg text-sm"
+                style={{ background: "var(--hover-bg)", border: "1px solid var(--border)", color: "var(--foreground)" }}
+              >
+                <option value="0">Без ограничений</option>
+                <option value="1">Level 1+</option>
+                <option value="2">Level 2+</option>
+                <option value="3">Level 3+</option>
+                <option value="4">Level 4+</option>
+                <option value="5">Level 5+</option>
+                <option value="6">Level 6+</option>
+                <option value="7">Level 7+</option>
+                <option value="8">Level 8+</option>
+                <option value="9">Level 9+</option>
+                <option value="10">Level 10</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--foreground)" }}>

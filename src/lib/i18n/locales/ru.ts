@@ -194,12 +194,12 @@ export const ru: Translations = {
     profile: "Профиль",
   },
   hero: {
-    badge: "TomskGG — турниры по CS2",
+    badge: "ZamesGG — турниры по CS2",
     title1: "Организуй",
     titleHighlight: "эпические",
     title2: "турниры по",
     titleGame: "CS2",
-    subtitle: "Киберспортивные турниры по CS2 в Томске: регистрация через Steam, турнирная сетка, глобальный рейтинг и полная статистика",
+    subtitle: "Киберспортивные турниры по CS2 в Zamesе: регистрация через Steam, турнирная сетка, глобальный рейтинг и полная статистика",
     viewTournaments: "Смотреть турниры",
     loginSteam: "Войти через Steam",
   },
@@ -337,10 +337,10 @@ export const ru: Translations = {
     empty: "Нет уведомлений",
   },
   footer: {
-    platform: "Киберспортивная платформа Томска",
+    platform: "Киберспортивная платформа Zamesа",
     navigation: "Навигация",
     information: "Информация",
-    copyright: "© {year} TomskGG — Киберспорт Томск",
+    copyright: "© {year} ZamesGG — Киберспорт Zames",
   },
   common: {
     back: "Назад",

@@ -18,22 +18,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TomskGG — турниры по CS2 в Томске",
+  title: "ZamesGG — турниры по CS2 в Zamesе",
   description:
-    "TomskGG — киберспортивная платформа Томска: турниры по CS2 (Counter-Strike 2) в Томске. Регистрация через Steam, турнирная сетка, рейтинг и статистика игроков.",
+    "ZamesGG — киберспортивная платформа Zamesа: турниры по CS2 (Counter-Strike 2) в Zamesе. Регистрация через Steam, турнирная сетка, рейтинг и статистика игроков.",
   keywords: [
-    "TomskGG",
-    "cs2 турниры Томск",
+    "ZamesGG",
+    "cs2 турниры Zames",
     "counter-strike 2 турниры",
-    "киберспорт Томск",
-    "киберспорт Томская область",
+    "киберспорт Zames",
+    "киберспорт Zamesая область",
   ],
   openGraph: {
-    title: "TomskGG — турниры по CS2 в Томске",
+    title: "ZamesGG — турниры по CS2 в Zamesе",
     description:
-      "TomskGG — киберспортивная платформа Томска: турниры по CS2 в Томске.",
-    url: "https://tomskgg.ru",
-    siteName: "TomskGG",
+      "ZamesGG — киберспортивная платформа Zamesа: турниры по CS2 в Zamesе.",
+    url: "https://zamesgg.ru",
+    siteName: "ZamesGG",
     locale: "ru_RU",
     type: "website",
   },
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "TomskGG",
+    title: "ZamesGG",
   },
 };
 
@@ -67,15 +67,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "TomskGG",
-              alternateName: "Tomsk Gaming",
-              url: "https://tomskgg.ru",
+              name: "ZamesGG",
+              alternateName: "Zames Gaming",
+              url: "https://zamesgg.ru",
               description:
-                "TomskGG — киберспортивная платформа Томска: турниры по CS2 в Томске.",
-              areaServed: { "@type": "City", name: "Томск" },
+                "ZamesGG — киберспортивная платформа Zamesа: турниры по CS2 в Zamesе.",
+              areaServed: { "@type": "City", name: "Zames" },
               address: {
                 "@type": "PostalAddress",
-                addressLocality: "Томск",
+                addressLocality: "Zames",
                 addressCountry: "RU",
               },
             }),

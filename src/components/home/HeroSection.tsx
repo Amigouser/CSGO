@@ -59,7 +59,7 @@ export default function HeroSection() {
           <span className="flex items-center gap-3 justify-center">
             <Trophy size={24} style={{ color: "var(--gold)" }} />
             <span className="hidden sm:inline">{t.hero.badge}</span>
-            <span className="sm:hidden">TomskGG — CS2</span>
+            <span className="sm:hidden">ZamesGG — CS2</span>
           </span>
         </div>
 

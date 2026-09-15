@@ -18,13 +18,13 @@ export const kg: Translations = {
   },
 
   hero: {
-    badge: "TomskGG — CS2 турнирлери",
+    badge: "ZamesGG — CS2 турнирлери",
     title1: "Уюштур",
     titleHighlight: "эпикалык",
     title2: "турнирлер",
     titleGame: "CS2",
     subtitle:
-      "Томсктогы CS2 киберспорт турнирлери: Steam аркылуу катталуу, турнир тору, глобалдык рейтинг жана толук статистика",
+      "Zamesтогы CS2 киберспорт турнирлери: Steam аркылуу катталуу, турнир тору, глобалдык рейтинг жана толук статистика",
     viewTournaments: "Турнирлерди көрүү",
     loginSteam: "Steam аркылуу кирүү",
   },
@@ -178,10 +178,10 @@ export const kg: Translations = {
   },
 
   footer: {
-    platform: "Томсктун киберспорт платформасы",
+    platform: "Zamesтун киберспорт платформасы",
     navigation: "Навигация",
     information: "Маалымат",
-    copyright: "© {year} TomskGG — Киберспорт Томск",
+    copyright: "© {year} ZamesGG — Киберспорт Zames",
   },
 
   common: {

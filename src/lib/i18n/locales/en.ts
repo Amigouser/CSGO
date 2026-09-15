@@ -18,13 +18,13 @@ export const en: Translations = {
   },
 
   hero: {
-    badge: "TomskGG — CS2 tournaments",
+    badge: "ZamesGG — CS2 tournaments",
     title1: "Organize",
     titleHighlight: "epic",
     title2: "tournaments in",
     titleGame: "CS2",
     subtitle:
-      "Esports tournaments for CS2 in Tomsk: Steam registration, tournament brackets, global rankings and full statistics",
+      "Esports tournaments for CS2 in Zames: Steam registration, tournament brackets, global rankings and full statistics",
     viewTournaments: "View Tournaments",
     loginSteam: "Login with Steam",
   },
@@ -178,10 +178,10 @@ export const en: Translations = {
   },
 
   footer: {
-    platform: "Esports platform of Tomsk",
+    platform: "Esports platform of Zames",
     navigation: "Navigation",
     information: "Information",
-    copyright: "© {year} TomskGG — Esports Tomsk",
+    copyright: "© {year} ZamesGG — Esports Zames",
   },
 
   common: {

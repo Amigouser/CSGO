@@ -234,7 +234,7 @@ export const ru: Translations = {
   howToStart: {
     title: "Как начать за 4 шага",
     step1Title: "Войди через Steam",
-    step1Desc: "Авторизуйся — MMR подтянется автоматически",
+    step1Desc: "Авторизуйся — FACEIT уровень подтянется автоматически",
     step1Link: "Войти",
     step2Title: "Найди турнир",
     step2Desc: "Выбери формат: Single, Double Elim, Swiss или Groups",
@@ -274,7 +274,7 @@ export const ru: Translations = {
     totalTournaments: "Всего турниров",
     activePlayers: "Активных игроков",
     matchesPlayed: "Матчей сыграно",
-    avgMmr: "Средний MMR",
+    avgMmr: "Средний ELO",
     recentMatches: "Последние матчи",
     topHeroes: "Топ оружие",
     picks: "убийств",

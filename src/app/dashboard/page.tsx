@@ -6,18 +6,18 @@ export default async function DashboardPage() {
     prisma.tournament.count(),
     prisma.user.count(),
     prisma.match.count(),
-    prisma.user.findMany({ orderBy: { mmr: "desc" }, take: 5 }),
+    prisma.user.findMany({ orderBy: { faceitElo: "desc" }, take: 5 }),
   ]);
 
-  const avgMmr = topPlayers.length > 0
-    ? Math.round(topPlayers.reduce((s, p) => s + p.mmr, 0) / topPlayers.length)
+  const avgElo = topPlayers.length > 0
+    ? Math.round(topPlayers.reduce((s, p) => s + p.faceitElo, 0) / topPlayers.length)
     : 0;
 
   const stats = [
     { label: "Всего турниров", value: tournamentCount, icon: Trophy, color: "var(--gold)" },
     { label: "Активных игроков", value: playerCount, icon: Users, color: "#52b788" },
     { label: "Матчей сыграно", value: matchCount, icon: Swords, color: "#4fc3f7" },
-    { label: "Средний MMR", value: avgMmr, icon: TrendingUp, color: "var(--gold)" },
+    { label: "Средний ELO", value: avgElo, icon: TrendingUp, color: "var(--gold)" },
   ];
 
   return (
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
                   <span className="text-sm font-bold w-6" style={{ color: i < 3 ? "var(--gold)" : "var(--text-sub)" }}>{i + 1}</span>
                   <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{p.nickname}</span>
                 </div>
-                <span className="text-sm font-bold" style={{ color: "var(--gold)" }}>{p.mmr} MMR</span>
+                <span className="text-sm font-bold" style={{ color: "var(--gold)" }}>{p.faceitElo > 0 ? `${p.faceitElo} ELO` : "—"}</span>
               </div>
             ))}
           </div>

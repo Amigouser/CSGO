@@ -10,8 +10,6 @@ interface UserData {
   steamId: string;
   nickname: string;
   avatar: string | null;
-  mmr: number;
-  rank: string;
   isAdmin: boolean;
   faceitLevel: number;
   faceitElo: number;
@@ -94,7 +92,7 @@ export default function UserMenu() {
               )}
             </div>
             <div className="text-xs" style={{ color: "var(--text-sub)" }}>
-              {user.rank} · {user.mmr.toLocaleString()} MMR
+              {user.faceitElo > 0 ? `${user.faceitElo} ELO` : "FACEIT не привязан"}
               {user.isAdmin && <span style={{ color: "var(--gold)" }}> · Админ</span>}
             </div>
           </div>

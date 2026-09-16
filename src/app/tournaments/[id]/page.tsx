@@ -178,8 +178,7 @@ export default async function TournamentDetailPage({
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>#</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Игрок</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>FACEIT</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>MMR</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Ранг</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>ELO</th>
               </tr>
             </thead>
             <tbody>
@@ -198,8 +197,9 @@ export default async function TournamentDetailPage({
                       <span className="text-xs" style={{ color: "var(--text-sub)" }}>—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-sm" style={{ color: "var(--gold)" }}>{p.user.mmr}</td>
-                  <td className="px-4 py-3 text-sm" style={{ color: "var(--text-sub)" }}>{p.user.rank}</td>
+                  <td className="px-4 py-3 text-sm" style={{ color: "var(--gold)" }}>
+                    {p.user.faceitElo > 0 ? p.user.faceitElo : "—"}
+                  </td>
                 </tr>
               ))}
             </tbody>

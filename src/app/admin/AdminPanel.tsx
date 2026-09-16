@@ -11,7 +11,7 @@ interface Participant {
   tournamentId: string;
   teamName: string | null;
   status: string;
-  user: { id: string; nickname: string; steamId: string; mmr: number; rank: string; faceitLevel: number; faceitElo: number };
+  user: { id: string; nickname: string; steamId: string; faceitLevel: number; faceitElo: number };
 }
 
 interface Tournament {
@@ -214,7 +214,7 @@ export default function AdminPanel({ tournaments }: { tournaments: Tournament[] 
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{p.user.nickname}</span>
                             {p.user.faceitLevel > 0 && <FaceitBadge level={p.user.faceitLevel} size="sm" />}
-                            <span className="text-xs" style={{ color: "var(--text-sub)" }}>{p.user.mmr} MMR · {p.user.rank}</span>
+                            <span className="text-xs" style={{ color: "var(--text-sub)" }}>{p.user.faceitElo > 0 ? `${p.user.faceitElo} ELO` : ""}</span>
                           </div>
                           <div className="flex gap-2">
                             <button
@@ -252,7 +252,7 @@ export default function AdminPanel({ tournaments }: { tournaments: Tournament[] 
                           <div className="flex items-center gap-2">
                             <span className="text-sm" style={{ color: "var(--foreground)" }}>{p.user.nickname}</span>
                             {p.user.faceitLevel > 0 && <FaceitBadge level={p.user.faceitLevel} size="sm" />}
-                            <span className="text-xs" style={{ color: "var(--text-sub)" }}>{p.user.mmr} MMR</span>
+                            <span className="text-xs" style={{ color: "var(--text-sub)" }}>{p.user.faceitElo > 0 ? `${p.user.faceitElo} ELO` : ""}</span>
                           </div>
                           <button
                             onClick={() => handleRemove(t.id, p.id)}

@@ -66,7 +66,7 @@ export default async function HallOfFamePage() {
                   <span className="text-sm font-bold" style={{ color: "var(--foreground)" }}>{p.nickname}</span>
                 </div>
                 <div className="text-xl font-bold" style={{ color: "var(--gold)" }}>{p.wins} побед</div>
-                <div className="text-xs" style={{ color: "var(--text-sub)" }}>{p.mmr} MMR · {p.rank}</div>
+                <div className="text-xs" style={{ color: "var(--text-sub)" }}>{p.faceitElo > 0 ? `${p.faceitElo} ELO` : ""}</div>
               </div>
             ))}
           </div>

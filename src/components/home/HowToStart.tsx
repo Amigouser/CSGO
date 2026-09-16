@@ -5,7 +5,7 @@ const steps = [
   {
     num: 1,
     title: "Войди через Steam",
-    desc: "Авторизуйся — MMR подтянется автоматически",
+    desc: "Авторизуйся — FACEIT уровень подтянется автоматически",
     link: "/login",
     linkText: "Войти",
     icon: (

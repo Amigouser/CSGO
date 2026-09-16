@@ -8,15 +8,15 @@ export async function GET(request: Request) {
     const offset = parseInt(searchParams.get("offset") || "0");
 
     const players = await prisma.user.findMany({
-      orderBy: { mmr: "desc" },
+      orderBy: { faceitElo: "desc" },
       take: limit,
       skip: offset,
       select: {
         id: true,
         nickname: true,
         avatar: true,
-        mmr: true,
-        rank: true,
+        faceitLevel: true,
+        faceitElo: true,
         wins: true,
         losses: true,
       },

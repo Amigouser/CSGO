@@ -63,7 +63,7 @@ export const kg: Translations = {
   howToStart: {
     title: "4 кадам менен баштоо",
     step1Title: "Steam аркылуу кир",
-    step1Desc: "Авторизациялан — MMR автоматтык түрдө алынат",
+    step1Desc: "Авторизациялан — FACEIT автоматтык түрдө алынат",
     step1Link: "Кирүү",
     step2Title: "Турнирди тап",
     step2Desc: "Форматты танда: Single, Double Elim, Swiss же Groups",
@@ -107,7 +107,7 @@ export const kg: Translations = {
     totalTournaments: "Бардык турнирлер",
     activePlayers: "Активдүү оюнчулар",
     matchesPlayed: "Ойнолгон матчтар",
-    avgMmr: "Орточо MMR",
+    avgMmr: "Орточо ELO",
     recentMatches: "Акыркы матчтар",
     topHeroes: "Топ курал",
     picks: "өлтүрүү",

@@ -86,18 +86,14 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
               Steam ID: {user.steamId}
             </p>
             <div className="flex flex-wrap gap-4">
-              <div>
-                <div className="text-xs" style={{ color: "var(--text-sub)" }}>MMR</div>
-                <div className="text-xl font-bold" style={{ color: "var(--gold)" }}>
-                  {user.mmr.toLocaleString()}
+              {user.faceitElo > 0 && (
+                <div>
+                  <div className="text-xs" style={{ color: "var(--text-sub)" }}>FACEIT ELO</div>
+                  <div className="text-xl font-bold" style={{ color: "var(--gold)" }}>
+                    {user.faceitElo}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="text-xs" style={{ color: "var(--text-sub)" }}>Ранг</div>
-                <div className="text-xl font-bold" style={{ color: "var(--foreground)" }}>
-                  👑 {user.rank}
-                </div>
-              </div>
+              )}
               <div>
                 <div className="text-xs" style={{ color: "var(--text-sub)" }}>W/L</div>
                 <div className="text-xl font-bold">

@@ -63,7 +63,7 @@ export const en: Translations = {
   howToStart: {
     title: "Get Started in 4 Steps",
     step1Title: "Login with Steam",
-    step1Desc: "Authorize — MMR will be pulled automatically",
+    step1Desc: "Authorize — FACEIT level will be pulled automatically",
     step1Link: "Login",
     step2Title: "Find a Tournament",
     step2Desc: "Choose format: Single, Double Elim, Swiss or Groups",
@@ -107,7 +107,7 @@ export const en: Translations = {
     totalTournaments: "Total Tournaments",
     activePlayers: "Active Players",
     matchesPlayed: "Matches Played",
-    avgMmr: "Average MMR",
+    avgMmr: "Average ELO",
     recentMatches: "Recent Matches",
     topHeroes: "Top Weapons",
     picks: "kills",

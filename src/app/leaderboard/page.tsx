@@ -1,21 +1,10 @@
-import { Trophy, Search, Medal, Crown, Award } from "lucide-react";
+import { Trophy, Medal, Crown, Award } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import FaceitBadge from "@/components/ui/FaceitBadge";
 
-const rankIcons: Record<string, string> = {
-  "Global Elite": "👑",
-  Supreme: "💎",
-  "Legendary Eagle": "🥇",
-  DMG: "🥇",
-  MG: "🥈",
-  "Gold Nova": "🥈",
-  "Silver Elite": "🥉",
-  "Silver I": "🥉",
-};
-
 export default async function LeaderboardPage() {
   const players = await prisma.user.findMany({
-    orderBy: { mmr: "desc" },
+    orderBy: { faceitElo: "desc" },
     take: 50,
   });
 
@@ -40,9 +29,8 @@ export default async function LeaderboardPage() {
               <tr style={{ borderBottom: "1px solid var(--border)" }}>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Место</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Игрок</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>MMR</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Ранг</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>FACEIT</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>FACEIT Lvl</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>ELO</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>W/L</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase" style={{ color: "var(--text-sub)" }}>Винрейт</th>
               </tr>
@@ -73,18 +61,17 @@ export default async function LeaderboardPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-sm font-bold" style={{ color: "var(--gold)" }}>
-                        {p.mmr}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-sm">
-                        {rankIcons[p.rank] || "🥉"} {p.rank}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
                       {p.faceitLevel > 0 ? (
                         <FaceitBadge level={p.faceitLevel} size="sm" />
+                      ) : (
+                        <span className="text-xs" style={{ color: "var(--text-sub)" }}>—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.faceitElo > 0 ? (
+                        <span className="text-sm font-bold" style={{ color: "var(--gold)" }}>
+                          {p.faceitElo}
+                        </span>
                       ) : (
                         <span className="text-xs" style={{ color: "var(--text-sub)" }}>—</span>
                       )}

@@ -15,7 +15,7 @@ export async function POST(
 
   const tournament = await prisma.tournament.findUnique({
     where: { id },
-    include: { _count: { where: { status: "approved" } } },
+    include: { participants: true },
   });
 
   if (!tournament) {
@@ -33,7 +33,8 @@ export async function POST(
     );
   }
 
-  if (tournament._count.participants >= tournament.maxTeams) {
+  const approvedCount = tournament.participants.filter((p) => p.status === "approved").length;
+  if (approvedCount >= tournament.maxTeams) {
     return NextResponse.json({ error: "Tournament is full" }, { status: 400 });
   }
 

@@ -23,7 +23,7 @@ interface Tournament {
   status: string;
   maxTeams: number;
   minFaceitLevel: number;
-  startDate: string;
+  startDate: Date;
   participants: Participant[];
 }
 

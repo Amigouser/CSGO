@@ -12,6 +12,11 @@ import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import RegisterButton from "./RegisterButton";
 import FaceitBadge from "@/components/ui/FaceitBadge";
+import TournamentBracket from "@/components/tournament/TournamentBracket";
+import {
+  generateSingleElimination,
+  generateDoubleElimination,
+} from "@/lib/bracket";
 
 const statusLabels: Record<string, string> = {
   upcoming: "Скоро",
@@ -56,6 +61,59 @@ export default async function TournamentDetailPage({
   const registrationStatus = myParticipation?.status || null;
   const approvedCount = tournament.participants.filter((p) => p.status === "approved").length;
   const isFull = approvedCount >= tournament.maxTeams;
+
+  /* ── Bracket data ── */
+  const dbMatches = await prisma.match.findMany({
+    where: { tournamentId: id },
+    orderBy: [{ round: "asc" }, { matchNumber: "asc" }],
+  });
+
+  const approvedIds = tournament.participants
+    .filter((p) => p.status === "approved")
+    .map((p) => p.userId);
+
+  const bracket =
+    approvedIds.length >= 2
+      ? tournament.format === "double_elim"
+        ? generateDoubleElimination(approvedIds)
+        : generateSingleElimination(approvedIds)
+      : [];
+
+  const playerMap: Record<
+    string,
+    { id: string; nickname: string; avatar: string | null; teamName: string | null }
+  > = {};
+  for (const p of tournament.participants) {
+    playerMap[p.userId] = {
+      id: p.userId,
+      nickname: p.user.nickname,
+      avatar: p.user.avatar,
+      teamName: p.teamName,
+    };
+  }
+
+  const mergedMatches = bracket.map((bm) => {
+    const db = dbMatches.find(
+      (dm) => dm.round === bm.round && dm.matchNumber === bm.matchNumber,
+    );
+    const homeId = db?.homePlayerId ?? bm.homePlayerId;
+    const awayId = db?.awayPlayerId ?? bm.awayPlayerId;
+    let winner: "home" | "away" | null = null;
+    if (db?.winner) {
+      if (db.winner === homeId) winner = "home";
+      else if (db.winner === awayId) winner = "away";
+    }
+    return {
+      ...bm,
+      homePlayerId: homeId,
+      awayPlayerId: awayId,
+      homeScore: db?.homeScore ?? null,
+      awayScore: db?.awayScore ?? null,
+      winner,
+      status: db?.status ?? "pending",
+      scheduledAt: db?.scheduledAt?.toISOString() ?? null,
+    };
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -206,6 +264,30 @@ export default async function TournamentDetailPage({
           </table>
         )}
       </div>
+
+      {/* Bracket */}
+      {mergedMatches.length > 0 && (
+        <div className="mt-6">
+          <h2
+            className="text-lg font-bold mb-4"
+            style={{ color: "var(--foreground)" }}
+          >
+            Турнирная сетка
+          </h2>
+          <div
+            className="rounded-xl p-4"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+            }}
+          >
+            <TournamentBracket
+              matches={mergedMatches}
+              players={playerMap}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

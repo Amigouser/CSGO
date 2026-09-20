@@ -44,6 +44,14 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "ZamesGG",
   },
+  icons: {
+    icon: [
+      { url: "/zamesgg-icon.svg", type: "image/svg+xml" },
+      { url: "/favicon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {

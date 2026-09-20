@@ -10,6 +10,7 @@
   --color-surface-2: var(--surface-2);
   --color-border: var(--border);
   --color-text-sub: var(--text-sub);
+  --color-accent-blue: var(--accent-blue);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -26,6 +27,7 @@
   --border: #30363d;
   --hover-bg: rgba(200, 155, 60, 0.05);
   --text-sub: #8b949e;
+  --accent-blue: #4fb8f0;
 }
 
 [data-theme="light"] {
@@ -39,6 +41,7 @@
   --border: #d0d7de;
   --hover-bg: rgba(184, 134, 11, 0.05);
   --text-sub: #656d76;
+  --accent-blue: #2b8fd6;
 }
 
 body {
@@ -97,6 +100,16 @@ body {
 .game-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.format-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.format-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(200, 155, 60, 0.12);
+  border-color: rgba(200, 155, 60, 0.4);
 }
 
 /* Skeleton loading */

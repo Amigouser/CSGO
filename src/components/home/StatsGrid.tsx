@@ -1,52 +1,78 @@
-import { Trophy, Flame, Users, Swords } from "lucide-react";
-import { prisma } from "@/lib/prisma";
+"use client";
 
-export default async function StatsGrid() {
-  const [tournamentCount, activeCount, playerCount, matchCount] = await Promise.all([
-    prisma.tournament.count(),
-    prisma.tournament.count({ where: { status: { in: ["active", "registration"] } } }),
-    prisma.user.count(),
-    prisma.match.count(),
-  ]);
+import { Shield, TrendingUp, Radio, LayoutGrid } from "lucide-react";
 
-  const stats = [
-    { label: "Турниров", value: tournamentCount, icon: Trophy, color: "var(--gold)" },
-    { label: "Активных", value: activeCount, icon: Flame, color: "var(--red)" },
-    { label: "Игроков", value: playerCount, icon: Users, color: "var(--gold)" },
-    { label: "Матчей", value: matchCount, icon: Swords, color: "var(--gold)" },
-  ];
+const features = [
+  {
+    icon: Shield,
+    title: "Steam-авторизация",
+    desc: "Вход за один клик — никнейм, аватар и статистика подтягиваются автоматически",
+    color: "var(--gold)",
+  },
+  {
+    icon: TrendingUp,
+    title: "FACEIT-рейтинг",
+    desc: "Уровень и ELO FACEIT отображаются в профиле и карточках матчей",
+    color: "#f97316",
+  },
+  {
+    icon: Radio,
+    title: "Live-матчи",
+    desc: "Следи за матчами в реальном времени — счёт, статус и расписание",
+    color: "#e5534b",
+  },
+  {
+    icon: LayoutGrid,
+    title: "4 формата сетки",
+    desc: "Single / Double Elimination, Swiss System, Groups + Playoffs",
+    color: "#4fc3f7",
+  },
+];
 
+export default function StatsGrid() {
   return (
     <section
-      className="py-12 px-4"
+      className="py-14 px-4"
       style={{ borderBottom: "1px solid var(--surface-2)" }}
     >
-      <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {stats.map((stat) => (
+      <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {features.map((f) => (
           <div
-            key={stat.label}
-            className="text-center p-4 sm:p-6 rounded-xl group hover:scale-105 transition-transform duration-300"
+            key={f.title}
+            className="text-center p-5 sm:p-6 rounded-xl group"
             style={{
               background: "var(--hover-bg)",
-              border: "1px solid rgba(200,155,60,0.2)",
+              border: "1px solid rgba(200,155,60,0.15)",
+              transition: "transform 0.2s, border-color 0.2s, box-shadow 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-3px)";
+              e.currentTarget.style.borderColor = "rgba(200,155,60,0.35)";
+              e.currentTarget.style.boxShadow = "0 6px 24px rgba(200,155,60,0.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "";
+              e.currentTarget.style.borderColor = "rgba(200,155,60,0.15)";
+              e.currentTarget.style.boxShadow = "";
             }}
           >
-            <div className="mb-2 flex justify-center">
-              <stat.icon
-                size={32}
-                style={{ color: stat.color }}
-                className="group-hover:scale-110 transition-transform"
-              />
+            <div className="mb-3 flex justify-center">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ background: `${f.color}14` }}
+              >
+                <f.icon size={24} style={{ color: f.color }} />
+              </div>
             </div>
-            <div
-              className="text-2xl sm:text-3xl font-bold"
-              style={{ color: "var(--gold)" }}
+            <h3
+              className="text-sm font-bold mb-1"
+              style={{ color: "var(--foreground)" }}
             >
-              {stat.value}
-            </div>
-            <div className="text-sm mt-1" style={{ color: "var(--text-sub)" }}>
-              {stat.label}
-            </div>
+              {f.title}
+            </h3>
+            <p className="text-xs leading-relaxed" style={{ color: "var(--text-sub)" }}>
+              {f.desc}
+            </p>
           </div>
         ))}
       </div>

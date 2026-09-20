@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Trophy, LayoutDashboard, Medal, Radio, Menu, X, Swords } from "lucide-react";
+import { Trophy, LayoutDashboard, Medal, Radio, Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
@@ -16,7 +16,7 @@ export default function Navbar() {
 
   const links = [
     { href: "/tournaments", label: t.nav.tournaments, icon: Trophy },
-    { href: "/live", label: t.nav.live, icon: Radio },
+    { href: "/live", label: t.nav.live, icon: Radio, accent: true },
     { href: "/leaderboard", label: t.nav.leaderboard, icon: Medal },
     { href: "/dashboard", label: t.nav.dashboard, icon: LayoutDashboard },
     { href: "/hall-of-fame", label: t.nav.hallOfFame, icon: Medal },
@@ -43,10 +43,10 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 font-black text-base sm:text-lg transition-opacity hover:opacity-80 flex-shrink-0"
+            className="flex items-center gap-2 transition-opacity hover:opacity-80 flex-shrink-0"
           >
-            <Swords size={22} style={{ color: "var(--gold)" }} />
-            <span style={{ color: "var(--foreground)" }}>
+            <img src="/zamesgg-icon.svg" alt="ZamesGG" width={36} height={36} />
+            <span className="text-xl font-bold" style={{ color: "var(--foreground)" }}>
               Zames<span style={{ color: "var(--gold)" }}>GG</span>
             </span>
           </Link>
@@ -55,6 +55,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-0.5">
             {links.map((link) => {
               const active = isActive(link.href);
+              const isAccent = "accent" in link && link.accent;
               return (
                 <Link
                   key={link.href}
@@ -67,7 +68,7 @@ export default function Navbar() {
                   onMouseEnter={(e) => {
                     if (!active) {
                       e.currentTarget.style.background = "var(--hover-bg)";
-                      e.currentTarget.style.color = "var(--foreground)";
+                      e.currentTarget.style.color = "var(--accent-blue)";
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -77,7 +78,10 @@ export default function Navbar() {
                     }
                   }}
                 >
-                  <link.icon size={14} />
+                  <link.icon
+                    size={14}
+                    style={isAccent && !active ? { color: "var(--accent-blue)" } : undefined}
+                  />
                   {link.label}
                   {active && (
                     <span

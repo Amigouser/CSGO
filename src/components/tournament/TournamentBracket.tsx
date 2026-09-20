@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import MatchCard, { type MatchCardPlayer } from "./MatchCard";
+import MatchDetailsModal from "./MatchDetailsModal";
 
 /* ─────────────────────── types ──────────────────────── */
 
@@ -31,6 +32,8 @@ interface PlayerInfo extends MatchCardPlayer {
 export interface TournamentBracketProps {
   matches: MatchData[];
   players: Record<string, PlayerInfo>;
+  /** Tournament gameMode — "1v1" shows FaceitBadge+ELO in cards */
+  gameMode?: string;
 }
 
 /* ───────────────────── constants ────────────────────── */
@@ -68,7 +71,9 @@ function lbRoundName(r: number, total: number): string {
 export default function TournamentBracket({
   matches,
   players,
+  gameMode,
 }: TournamentBracketProps) {
+  const [modalMatchId, setModalMatchId] = useState<string | null>(null);
   /* ── Layout: positions for every match card ── */
   const layout = useMemo(() => {
     const ub = new Map<number, MatchData[]>();
@@ -363,29 +368,40 @@ export default function TournamentBracket({
               style={{ position: "absolute", left: p.x, top: p.y }}
             >
               <MatchCard
+                matchId={m.id}
                 home={
                   hp
-                    ? { nickname: hp.nickname, avatar: hp.avatar, teamName: hp.teamName }
+                    ? { nickname: hp.nickname, avatar: hp.avatar, teamName: hp.teamName, faceitLevel: hp.faceitLevel, faceitElo: hp.faceitElo }
                     : undefined
                 }
                 away={
                   ap
-                    ? { nickname: ap.nickname, avatar: ap.avatar, teamName: ap.teamName }
+                    ? { nickname: ap.nickname, avatar: ap.avatar, teamName: ap.teamName, faceitLevel: ap.faceitLevel, faceitElo: ap.faceitElo }
                     : undefined
                 }
                 homeScore={m.homeScore}
                 awayScore={m.awayScore}
                 winner={m.winner}
                 status={m.status}
-                scheduledAt={m.scheduledAt}
                 width={CW}
                 height={CH}
                 highlight={m.bracketType === "grand_final"}
+                showFaceit={gameMode === "1v1"}
+                onInfoClick={setModalMatchId}
               />
             </div>
           );
         })}
       </div>
+
+      {/* Match details modal */}
+      {modalMatchId && (
+        <MatchDetailsModal
+          matchId={modalMatchId}
+          isOpen={!!modalMatchId}
+          onClose={() => setModalMatchId(null)}
+        />
+      )}
     </div>
   );
 }

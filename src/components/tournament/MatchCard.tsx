@@ -1,52 +1,46 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Info } from "lucide-react";
+import FaceitBadge from "@/components/ui/FaceitBadge";
 
 export interface MatchCardPlayer {
   nickname: string;
   avatar?: string | null;
   teamName?: string | null;
+  faceitLevel?: number;
+  faceitElo?: number;
 }
 
 export interface MatchCardProps {
+  matchId: string;
   home?: MatchCardPlayer;
   away?: MatchCardPlayer;
   homeScore?: number | null;
   awayScore?: number | null;
   winner?: "home" | "away" | null;
   status?: string;
-  scheduledAt?: string | null;
   width: number;
   height: number;
   highlight?: boolean;
+  /** Show FACEIT badge + ELO next to player name (for 1v1) */
+  showFaceit?: boolean;
+  /** Called when user clicks the "i" button */
+  onInfoClick?: (matchId: string) => void;
 }
 
 export default function MatchCard({
+  matchId,
   home,
   away,
   homeScore,
   awayScore,
   winner,
   status,
-  scheduledAt,
   width,
   height,
   highlight,
+  showFaceit,
+  onInfoClick,
 }: MatchCardProps) {
-  const [showInfo, setShowInfo] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  // Close popover on outside click
-  useEffect(() => {
-    if (!showInfo) return;
-    const close = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setShowInfo(false);
-    };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, [showInfo]);
-
   const done = status === "completed";
   const half = height / 2;
 
@@ -67,7 +61,7 @@ export default function MatchCard({
         style={{
           display: "flex",
           alignItems: "center",
-          padding: "0 10px",
+          padding: "0 8px",
           height: half,
           opacity: isLose ? 0.4 : 1,
         }}
@@ -75,11 +69,11 @@ export default function MatchCard({
         {/* Avatar / initial */}
         <div
           style={{
-            width: 22,
-            height: 22,
+            width: 20,
+            height: 20,
             borderRadius: 4,
             background: "var(--surface-2)",
-            marginRight: 8,
+            marginRight: 6,
             flexShrink: 0,
             overflow: "hidden",
             display: "flex",
@@ -94,59 +88,80 @@ export default function MatchCard({
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           ) : (
-            <span style={{ fontSize: 10, color: "var(--text-sub)" }}>
+            <span style={{ fontSize: 9, color: "var(--text-sub)" }}>
               {p ? p.nickname.charAt(0).toUpperCase() : "?"}
             </span>
           )}
         </div>
 
-        {/* Name */}
-        <span
+        {/* Name + optional FaceitBadge */}
+        <div
           style={{
             flex: 1,
-            fontSize: 12,
-            fontWeight: isWin ? 700 : 400,
-            color: p ? "var(--foreground)" : "var(--text-sub)",
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
             overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
           }}
         >
-          {name}
-        </span>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: isWin ? 700 : 400,
+              color: p ? "var(--foreground)" : "var(--text-sub)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {name}
+          </span>
+          {showFaceit && p?.faceitLevel && p.faceitLevel > 0 && (
+            <div style={{ flexShrink: 0 }}>
+              <FaceitBadge level={p.faceitLevel} elo={p.faceitElo} size="sm" showElo={false} />
+            </div>
+          )}
+        </div>
 
-        {/* Score */}
-        {done && score != null ? (
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 700,
-              color: isWin ? "var(--gold)" : "var(--text-sub)",
-              marginLeft: 8,
-              flexShrink: 0,
-            }}
-          >
-            {score}
-          </span>
-        ) : (
-          <span
-            style={{
-              fontSize: 12,
-              color: "var(--text-sub)",
-              marginLeft: 8,
-              flexShrink: 0,
-              opacity: 0.3,
-            }}
-          >
-            –
-          </span>
-        )}
+        {/* Score + ELO */}
+        <div style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
+          {showFaceit && p?.faceitElo && p.faceitElo > 0 && (
+            <span style={{ fontSize: 10, color: "var(--text-sub)" }}>
+              {p.faceitElo}
+            </span>
+          )}
+          {done && score != null ? (
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: isWin ? "var(--gold)" : "var(--text-sub)",
+                minWidth: 16,
+                textAlign: "right",
+              }}
+            >
+              {score}
+            </span>
+          ) : (
+            <span
+              style={{
+                fontSize: 12,
+                color: "var(--text-sub)",
+                opacity: 0.3,
+                minWidth: 16,
+                textAlign: "right",
+              }}
+            >
+              –
+            </span>
+          )}
+        </div>
       </div>
     );
   };
 
   return (
-    <div ref={ref} style={{ position: "relative", width, height }}>
+    <div style={{ position: "relative", width, height }}>
       {/* Card body */}
       <div
         style={{
@@ -168,7 +183,7 @@ export default function MatchCard({
       <button
         onClick={(e) => {
           e.stopPropagation();
-          setShowInfo(!showInfo);
+          onInfoClick?.(matchId);
         }}
         style={{
           position: "absolute",
@@ -187,46 +202,11 @@ export default function MatchCard({
           padding: 0,
         }}
       >
-        <Info size={9} />
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+          <text x="12" y="16" textAnchor="middle" fontSize="14" fontWeight="bold" fill="currentColor">i</text>
+        </svg>
       </button>
-
-      {/* Info popover */}
-      {showInfo && (
-        <div
-          style={{
-            position: "absolute",
-            left: width + 8,
-            top: 0,
-            zIndex: 20,
-            width: 180,
-            padding: 12,
-            borderRadius: 8,
-            background: "var(--surface)",
-            border: "1px solid var(--border)",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-            fontSize: 11,
-            lineHeight: 1.7,
-            color: "var(--text-sub)",
-          }}
-        >
-          <div style={{ fontWeight: 600, marginBottom: 4, color: "var(--foreground)" }}>
-            Детали матча
-          </div>
-          <div>
-            Статус: {done ? "Завершён" : status === "active" ? "Идёт" : "Ожидание"}
-          </div>
-          {scheduledAt && (
-            <div>Дата: {new Date(scheduledAt).toLocaleString("ru-RU")}</div>
-          )}
-          {done && (
-            <div>
-              Счёт: {homeScore ?? 0} – {awayScore ?? 0}
-            </div>
-          )}
-          {home && <div>🏠 {home.teamName || home.nickname}</div>}
-          {away && <div>✈️ {away.teamName || away.nickname}</div>}
-        </div>
-      )}
     </div>
   );
 }

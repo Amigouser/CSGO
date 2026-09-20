@@ -81,7 +81,7 @@ export default async function TournamentDetailPage({
 
   const playerMap: Record<
     string,
-    { id: string; nickname: string; avatar: string | null; teamName: string | null }
+    { id: string; nickname: string; avatar: string | null; teamName: string | null; faceitLevel: number; faceitElo: number }
   > = {};
   for (const p of tournament.participants) {
     playerMap[p.userId] = {
@@ -89,6 +89,8 @@ export default async function TournamentDetailPage({
       nickname: p.user.nickname,
       avatar: p.user.avatar,
       teamName: p.teamName,
+      faceitLevel: p.user.faceitLevel,
+      faceitElo: p.user.faceitElo,
     };
   }
 
@@ -284,6 +286,7 @@ export default async function TournamentDetailPage({
             <TournamentBracket
               matches={mergedMatches}
               players={playerMap}
+              gameMode={tournament.gameMode}
             />
           </div>
         </div>

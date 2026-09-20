@@ -116,6 +116,7 @@ model Match {
   winner       String?
   status       String    @default("pending")
   scheduledAt  DateTime?
+  serverLink   String?
   createdAt    DateTime  @default(now())
 
   tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Trophy, Trash2, Play, UserCheck, UserX, Users, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Trophy, Trash2, Play, UserCheck, UserX, Users, Clock, CheckCircle, XCircle, ArrowUpDown, ChevronUp, ChevronDown, Shuffle } from "lucide-react";
 import FaceitBadge from "@/components/ui/FaceitBadge";
 
 interface Participant {
@@ -37,6 +37,8 @@ const statusLabels: Record<string, string> = {
 export default function AdminPanel({ tournaments }: { tournaments: Tournament[] }) {
   const [data, setData] = useState(tournaments);
   const [loading, setLoading] = useState("");
+  const [seedingId, setSeedingId] = useState<string | null>(null);
+  const [seedOrder, setSeedOrder] = useState<Record<string, string[]>>({});
 
   const api = async (url: string, opts?: RequestInit) => {
     const res = await fetch(url, { headers: { "Content-Type": "application/json" }, ...opts });
@@ -131,6 +133,54 @@ export default function AdminPanel({ tournaments }: { tournaments: Tournament[] 
       setData((prev) => prev.filter((t) => t.id !== tournamentId));
     } catch { alert("Ошибка"); }
     finally { setLoading(""); }
+  };
+
+  // ── Seeding ──
+
+  const initSeed = (tournamentId: string, approved: Participant[]) => {
+    setSeedOrder((prev) => {
+      if (prev[tournamentId]) return prev;
+      return { ...prev, [tournamentId]: approved.map((p) => p.userId) };
+    });
+    setSeedingId(tournamentId);
+  };
+
+  const moveSeed = (tournamentId: string, index: number, dir: -1 | 1) => {
+    setSeedOrder((prev) => {
+      const arr = [...(prev[tournamentId] || [])];
+      const target = index + dir;
+      if (target < 0 || target >= arr.length) return prev;
+      [arr[index], arr[target]] = [arr[target], arr[index]];
+      return { ...prev, [tournamentId]: arr };
+    });
+  };
+
+  const shuffleSeed = (tournamentId: string, approved: Participant[]) => {
+    setSeedOrder((prev) => {
+      const arr = [...approved.map((p) => p.userId)];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return { ...prev, [tournamentId]: arr };
+    });
+  };
+
+  const handleGenerateBracket = async (tournamentId: string) => {
+    const ids = seedOrder[tournamentId];
+    if (!ids || ids.length < 2) { alert("Нужно минимум 2 участника"); return; }
+    if (!confirm("Сгенерировать сетку? Существующие матчи будут заменены.")) return;
+    setLoading(tournamentId);
+    try {
+      await api(`/api/tournaments/${tournamentId}/seed`, {
+        method: "POST",
+        body: JSON.stringify({ participantIds: ids }),
+      });
+      alert("Сетка сгенерирована!");
+      setSeedingId(null);
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Ошибка");
+    } finally { setLoading(""); }
   };
 
   return (
@@ -266,6 +316,106 @@ export default function AdminPanel({ tournaments }: { tournaments: Tournament[] 
                         </div>
                       ))}
                     </div>
+                  </div>
+                )}
+
+                {/* Seeding */}
+                {approved.length >= 2 && (t.status === "upcoming" || t.status === "registration") && (
+                  <div className="px-4 pb-4">
+                    {seedingId === t.id ? (
+                      <div
+                        className="rounded-lg overflow-hidden"
+                        style={{ border: "1px solid rgba(200,155,60,0.25)" }}
+                      >
+                        <div
+                          className="p-3 flex items-center justify-between"
+                          style={{ background: "rgba(200,155,60,0.06)" }}
+                        >
+                          <h3 className="text-xs font-bold uppercase flex items-center gap-1.5" style={{ color: "var(--gold)" }}>
+                            <ArrowUpDown size={14} /> Сидирование ({approved.length})
+                          </h3>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => shuffleSeed(t.id, approved)}
+                              className="px-2 py-1 rounded text-xs cursor-pointer flex items-center gap-1"
+                              style={{ background: "var(--hover-bg)", color: "var(--text-sub)" }}
+                            >
+                              <Shuffle size={11} /> Перемешать
+                            </button>
+                            <button
+                              onClick={() => setSeedingId(null)}
+                              className="px-2 py-1 rounded text-xs cursor-pointer"
+                              style={{ color: "var(--text-sub)", background: "transparent" }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        </div>
+                        <div className="p-3 space-y-1">
+                          {(seedOrder[t.id] || []).map((userId, idx) => {
+                            const p = approved.find((a) => a.userId === userId);
+                            if (!p) return null;
+                            const isFirst = idx === 0;
+                            const isLast = idx === (seedOrder[t.id]?.length ?? 0) - 1;
+                            return (
+                              <div
+                                key={userId}
+                                className="flex items-center gap-2 px-2 py-1.5 rounded-lg"
+                                style={{ background: "var(--hover-bg)" }}
+                              >
+                                <span className="text-[11px] font-bold w-5 text-center" style={{ color: "var(--text-sub)" }}>
+                                  {idx + 1}
+                                </span>
+                                <span className="text-sm flex-1" style={{ color: "var(--foreground)" }}>
+                                  {p.teamName || p.user.nickname}
+                                </span>
+                                {p.user.faceitLevel > 0 && <FaceitBadge level={p.user.faceitLevel} size="sm" />}
+                                <div className="flex gap-0.5">
+                                  <button
+                                    onClick={() => moveSeed(t.id, idx, -1)}
+                                    disabled={isFirst}
+                                    className="p-0.5 rounded cursor-pointer disabled:opacity-20"
+                                    style={{ color: "var(--text-sub)", background: "transparent" }}
+                                  >
+                                    <ChevronUp size={14} />
+                                  </button>
+                                  <button
+                                    onClick={() => moveSeed(t.id, idx, 1)}
+                                    disabled={isLast}
+                                    className="p-0.5 rounded cursor-pointer disabled:opacity-20"
+                                    style={{ color: "var(--text-sub)", background: "transparent" }}
+                                  >
+                                    <ChevronDown size={14} />
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="p-3 pt-0">
+                          <button
+                            onClick={() => handleGenerateBracket(t.id)}
+                            disabled={loading === t.id}
+                            className="w-full py-2.5 rounded-lg text-xs font-bold cursor-pointer flex items-center justify-center gap-1.5"
+                            style={{
+                              background: "linear-gradient(135deg, var(--gold), var(--gold-light))",
+                              color: "var(--background)",
+                              opacity: loading === t.id ? 0.6 : 1,
+                            }}
+                          >
+                            {loading === t.id ? "Генерация..." : "Сгенерировать сетку"}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => initSeed(t.id, approved)}
+                        className="w-full py-2 rounded-lg text-xs font-semibold cursor-pointer flex items-center justify-center gap-1.5"
+                        style={{ background: "rgba(200,155,60,0.08)", color: "var(--gold)", border: "1px solid rgba(200,155,60,0.2)" }}
+                      >
+                        <ArrowUpDown size={13} /> Настроить сидирование
+                      </button>
+                    )}
                   </div>
                 )}
 

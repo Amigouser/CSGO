@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import BottomNav from "@/components/layout/BottomNav";
 import { NotificationProvider } from "@/components/ui/NotificationCenter";
+import CookieNotice from "@/components/ui/CookieNotice";
 import { I18nProvider } from "@/lib/i18n";
 import "./globals.css";
 
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <BottomNav />
           </NotificationProvider>
         </I18nProvider>
+        <CookieNotice />
       </body>
     </html>
   );

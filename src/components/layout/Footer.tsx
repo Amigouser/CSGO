@@ -59,6 +59,9 @@ export default function Footer() {
               <Link href="/login" className="text-sm" style={{ color: "var(--text-sub)" }}>
                 {t.nav.login}
               </Link>
+              <Link href="/privacy" className="text-sm" style={{ color: "var(--text-sub)" }}>
+                Политика конфиденциальности
+              </Link>
             </div>
           </div>
           <div>
